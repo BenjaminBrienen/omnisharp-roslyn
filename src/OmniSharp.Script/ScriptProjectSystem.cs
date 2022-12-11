@@ -13,7 +13,8 @@ using Microsoft.Extensions.Logging;
 using OmniSharp.FileSystem;
 using OmniSharp.FileWatching;
 using OmniSharp.Mef;
-using OmniSharp.Models.WorkspaceInformation;
+using OmniSharp.Models.V1.WorkspaceInformation;
+using OmniSharp.Roslyn;
 using OmniSharp.Services;
 
 namespace OmniSharp.Script
@@ -163,12 +164,12 @@ namespace OmniSharp.Script
             }
 
             var document = _workspace.GetDocument(filePath);
-            var projectFilePath = document != null
+            var projectFilePath = document is not null
                 ? document.Project.FilePath
                 : filePath;
 
             var projectInfo = GetProjectFileInfo(projectFilePath);
-            if (projectInfo == null)
+            if (projectInfo is null)
             {
                 _logger.LogDebug($"Could not locate project for '{projectFilePath}'");
                 return Task.FromResult<object>(null);

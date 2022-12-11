@@ -1,77 +1,60 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using OmniSharp.LoggingExtensions;
 
-#nullable enable
+namespace OmniSharp.LoggingExtensions;
 
-namespace Microsoft.Extensions.Logging
+[InterpolatedStringHandler]
+public record struct LoggerInterpolatedStringHandler : IEquatable<LoggerInterpolatedStringHandler>
 {
-    public static class LoggingExtensions
+    private readonly StringBuilder? _builder;
+    public LoggerInterpolatedStringHandler(int literalLength, ILogger logger, LogLevel level)
     {
-        public static void Log(this ILogger logger, LogLevel logLevel, [InterpolatedStringHandlerArgument("logger", "logLevel")] LoggerInterpolatedStringHandler handler)
-        {
-            logger.Log(logLevel, handler.ToString());
-        }
+        if (logger is null)
+            throw new ArgumentNullException(nameof(logger));
+        _builder = logger.IsEnabled(level) ? (new(literalLength)) : null;
     }
 
-    [InterpolatedStringHandler]
-    public struct LoggerInterpolatedStringHandler
+    public void AppendLiteral(string literal)
     {
-        private readonly StringBuilder? _builder;
-        public LoggerInterpolatedStringHandler(int literalLength, int formattedCount, ILogger logger, LogLevel level, out bool shouldAppend)
-        {
-            if (logger.IsEnabled(level))
-            {
-                shouldAppend = true;
-                _builder = new(literalLength);
-            }
-            else
-            {
-                shouldAppend = false;
-                _builder = null;
-            }
-        }
-
-        public void AppendLiteral(string literal)
-        {
-            Debug.Assert(_builder != null);
-            _builder!.Append(literal);
-        }
-
-        public void AppendFormatted<T>(T t)
-        {
-            Debug.Assert(_builder != null);
-            _builder!.Append(t?.ToString());
-        }
-
-        public void AppendFormatted<T>(T t, int alignment, string format)
-        {
-            Debug.Assert(_builder != null);
-            _builder!.Append(string.Format($"{{0,{alignment}:{format}}}", t));
-        }
-
-        public override string ToString()
-        {
-            return _builder?.ToString() ?? string.Empty;
-        }
+        Debug.Assert(_builder is not null);
+        _builder!.Append(literal);
     }
+
+    public void AppendFormatted<T>(T t)
+    {
+        Debug.Assert(_builder is not null);
+        _builder!.Append(t?.ToString());
+    }
+
+    public void AppendFormatted<T>(T t, int alignment, string format)
+    {
+        Debug.Assert(_builder is not null);
+        _builder!.Append(string.Format(CultureInfo.InvariantCulture, $"{{0,{alignment}:{format}}}", t));
+    }
+
+    public override string ToString() => _builder?.ToString() ?? string.Empty;
 }
 
 #if !NET6_0_OR_GREATER
 namespace System.Runtime.CompilerServices
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
-    internal sealed class InterpolatedStringHandlerAttribute : Attribute
-    {
-    }
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    internal sealed class InterpolatedStringHandlerArgumentAttribute : Attribute
-    {
-        public InterpolatedStringHandlerArgumentAttribute(string argument) => Arguments = new string[] { argument };
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
+internal sealed class InterpolatedStringHandlerAttribute : Attribute
+{
+}
+[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+internal sealed class InterpolatedStringHandlerArgumentAttribute : Attribute
+{
+    public InterpolatedStringHandlerArgumentAttribute(string argument) => Arguments = new string[] { argument };
 
-        public InterpolatedStringHandlerArgumentAttribute(params string[] arguments) => Arguments = arguments;
+    public InterpolatedStringHandlerArgumentAttribute(params string[] arguments) => Arguments = arguments;
 
-        public string[] Arguments { get; }
-    }
+    public string[] Arguments { get; }
+}
 }
 #endif

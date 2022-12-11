@@ -27,7 +27,7 @@ using OmniSharp.Roslyn.CSharp.Workers.Diagnostics;
 using OmniSharp.Roslyn.Utilities;
 using OmniSharp.Services;
 using OmniSharp.Utilities;
-using FixAllScope = OmniSharp.Abstractions.Models.V1.FixAll.FixAllScope;
+using FixAllScope = OmniSharp.Models.V1.FixAll.FixAllScope;
 
 #nullable enable
 
@@ -73,7 +73,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
         {
             // To produce a complete list of code actions for the document wait until all projects are loaded.
             var document = await this.Workspace.GetDocumentFromFullProjectModelAsync(request.FileName);
-            if (document == null)
+            if (document is null)
             {
                 return Array.Empty<AvailableCodeAction>();
             }
@@ -108,7 +108,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
 
         private TextSpan GetTextSpan(ICodeActionRequest request, SourceText sourceText)
         {
-            if (request.Selection != null)
+            if (request.Selection is not null)
             {
                 return sourceText.GetSpanFromRange(request.Selection);
             }
@@ -295,7 +295,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
                     var newDocument = newSolution.GetDocument(documentId);
                     var text = await newDocument!.GetTextAsync();
 
-                    var newFilePath = newDocument.FilePath == null || !Path.IsPathRooted(newDocument.FilePath)
+                    var newFilePath = newDocument.FilePath is null || !Path.IsPathRooted(newDocument.FilePath)
                         ? Path.Combine(directory, newDocument.Name)
                         : newDocument.FilePath;
 
@@ -315,7 +315,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
                     // tries to modify them. This is a strange interaction because the workspace could be left
                     // in an incomplete state if the host editor doesn't apply changes to the new file, but it's
                     // what we've got today.
-                    if (this.Workspace.GetDocument(newFilePath) == null)
+                    if (this.Workspace.GetDocument(newFilePath) is null)
                     {
                         var fileInfo = new FileInfo(newFilePath);
                         if (!fileInfo.Exists)
@@ -347,12 +347,12 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
                 {
                     var newDocument = newSolution.GetDocument(documentId);
                     var oldDocument = oldSolution.GetDocument(documentId);
-                    Debug.Assert(oldDocument!.FilePath != null);
-                    Debug.Assert(newDocument!.FilePath != null);
+                    Debug.Assert(oldDocument!.FilePath is not null);
+                    Debug.Assert(newDocument!.FilePath is not null);
                     string filePath = newDocument.FilePath!;
 
                     // file rename
-                    if (oldDocument != null && newDocument.Name != oldDocument.Name)
+                    if (oldDocument is not null && newDocument.Name != oldDocument.Name)
                     {
                         if (wantsAllCodeActionOperations)
                         {
@@ -379,7 +379,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
                         {
                             var linePositionSpanTextChanges = await TextChanges.GetAsync(newDocument, oldDocument);
 
-                            modifiedFileResponse.Changes = modifiedFileResponse.Changes != null
+                            modifiedFileResponse.Changes = modifiedFileResponse.Changes is not null
                                 ? modifiedFileResponse.Changes.Union(linePositionSpanTextChanges)
                                 : linePositionSpanTextChanges;
                         }

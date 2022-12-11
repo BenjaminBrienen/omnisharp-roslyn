@@ -16,7 +16,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         public static IEnumerable<IJsonRpcHandler> Enumerate(RequestHandlers handlers)
         {
             foreach (var (selector, handler) in handlers.OfType<Mef.IRequestHandler<BlockStructureRequest, BlockStructureResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpFoldingRangenHandler(handler, selector);
         }
 

@@ -5,6 +5,7 @@
         <PlatformTarget>AnyCPU</PlatformTarget>
         <IsPackable>true</IsPackable>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

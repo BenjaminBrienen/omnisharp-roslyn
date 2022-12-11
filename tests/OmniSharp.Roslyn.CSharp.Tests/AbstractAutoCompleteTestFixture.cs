@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using OmniSharp.Models.AutoComplete;
+using OmniSharp.Models.v1.AutoComplete;
 using OmniSharp.Roslyn.CSharp.Services.Intellisense;
 using TestUtility;
 using Xunit.Abstractions;

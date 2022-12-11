@@ -34,7 +34,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
             CancellationToken cancellationToken)
         {
             var (metadataDocument, _) = await externalSourceService.GetAndAddExternalSymbolDocument(document.Project, symbol, cancellationToken);
-            if (metadataDocument != null)
+            if (metadataDocument is not null)
             {
                 var metadataLocation = await externalSourceService.GetExternalSymbolLocation(symbol, metadataDocument, cancellationToken);
                 return metadataLocation.GetMappedLineSpan();

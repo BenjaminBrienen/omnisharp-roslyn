@@ -23,17 +23,17 @@ namespace OmniSharp.Roslyn.CSharp.Services.Highlighting
         public async Task<HighlightResponse> Handle(HighlightRequest request)
         {
             var documents = _workspace.GetDocuments(request.FileName);
-            if (request.ProjectNames != null && request.ProjectNames.Length > 0)
+            if (request.ProjectNames is not null && request.ProjectNames.Length > 0)
             {
                 documents = documents.Where(d => request.ProjectNames.Contains(d.Project.Name, StringComparer.Ordinal));
             }
 
-            if (request.Classifications == null || request.Classifications.Length > 0)
+            if (request.Classifications is null || request.Classifications.Length > 0)
             {
                 request.Classifications = AllClassifications;
             }
 
-            if (request.ExcludeClassifications != null && request.ExcludeClassifications.Length > 0)
+            if (request.ExcludeClassifications is not null && request.ExcludeClassifications.Length > 0)
             {
                 request.Classifications = request.Classifications.Except(request.ExcludeClassifications).ToArray();
             }
@@ -46,7 +46,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Highlighting
                 var text = await document.GetTextAsync();
                 var spans = new List<ClassifiedSpan>();
 
-                if (request.Lines == null || request.Lines.Length == 0)
+                if (request.Lines is null || request.Lines.Length == 0)
                 {
                     foreach (var span in await Classifier.GetClassifiedSpansAsync(document, new TextSpan(0, text.Length)))
                     {
@@ -83,7 +83,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Highlighting
                 Highlights = results
                     .GroupBy(result => result.Span.TextSpan.ToString())
                     .Select(CreateHighlightSpan)
-                    .Where(span => span != null)
+                    .Where(span => span is not null)
                     .ToArray()
             };
         }

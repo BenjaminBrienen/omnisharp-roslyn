@@ -33,19 +33,19 @@ namespace OmniSharp.Services
             this.CodeRefactoringProviders = types
                 .Where(t => typeof(CodeRefactoringProvider).IsAssignableFrom(t))
                 .Select(type => type.CreateInstance<CodeRefactoringProvider>())
-                .Where(instance => instance != null)
+                .Where(instance => instance is not null)
                 .ToImmutableArray();
 
             this.CodeFixProviders = types
                 .Where(t => typeof(CodeFixProvider).IsAssignableFrom(t))
                 .Select(type => type.CreateInstance<CodeFixProvider>())
-                .Where(instance => instance != null)
+                .Where(instance => instance is not null)
                 .ToImmutableArray();
 
             this.CodeDiagnosticAnalyzerProviders = types
                 .Where(t => typeof(DiagnosticAnalyzer).IsAssignableFrom(t))
                 .Select(type => type.CreateInstance<DiagnosticAnalyzer>())
-                .Where(instance => instance != null)
+                .Where(instance => instance is not null)
                 .ToImmutableArray();
         }
     }

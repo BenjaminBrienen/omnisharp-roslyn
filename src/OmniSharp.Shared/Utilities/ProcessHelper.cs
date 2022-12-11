@@ -98,7 +98,7 @@ namespace OmniSharp.Utilities
             {
                 lastSignal = DateTime.UtcNow;
 
-                if (outputDataReceived != null && !string.IsNullOrEmpty(e.Data))
+                if (outputDataReceived is not null && !string.IsNullOrEmpty(e.Data))
                 {
                     outputDataReceived(e.Data);
                 }
@@ -108,7 +108,7 @@ namespace OmniSharp.Utilities
             {
                 lastSignal = DateTime.UtcNow;
 
-                if (errorDataReceived != null && !string.IsNullOrEmpty(e.Data))
+                if (errorDataReceived is not null && !string.IsNullOrEmpty(e.Data))
                 {
                     errorDataReceived(e.Data);
                 }

@@ -18,7 +18,7 @@ namespace OmniSharp.Cake.Configuration.Parser
             while (reader.Peek() != -1)
             {
                 var token = Tokenize(reader);
-                if (token != null)
+                if (token is not null)
                 {
                     result.Add(token);
                 }

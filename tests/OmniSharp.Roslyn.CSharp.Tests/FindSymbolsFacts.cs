@@ -11,6 +11,8 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using OmniSharp.Models.v1.SourceGeneratedFile;
+using OmniSharp.Models.v1;
+using OmniSharp.Models.v1.FindSymbols;
 
 namespace OmniSharp.Roslyn.CSharp.Tests
 {

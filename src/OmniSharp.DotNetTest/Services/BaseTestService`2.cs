@@ -5,6 +5,7 @@ using OmniSharp.DotNetTest.Models;
 using OmniSharp.Eventing;
 using OmniSharp.Mef;
 using OmniSharp.Models;
+using OmniSharp.Roslyn;
 using OmniSharp.Services;
 
 namespace OmniSharp.DotNetTest.Services

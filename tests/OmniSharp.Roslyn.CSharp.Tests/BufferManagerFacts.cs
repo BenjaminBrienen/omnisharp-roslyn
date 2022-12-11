@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using OmniSharp.FileWatching;
 using OmniSharp.Models;
 using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Models.V1;
+using OmniSharp.Roslyn;
 using OmniSharp.Services;
 using TestUtility;
 using Xunit;

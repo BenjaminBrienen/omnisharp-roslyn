@@ -1,9 +1,7 @@
-﻿namespace OmniSharp.Mef
-{
-    public class OmniSharpRequestHandlerMetadata
-    {
-        public string EndpointName { get; set; }
+﻿namespace OmniSharp.Mef;
 
-        public string Language { get; set; }
-    }
-}
+public record OmniSharpRequestHandlerMetadata
+(
+    string EndpointName,
+    string Language
+);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using OmniSharp.Models;
 using OmniSharp.Models.MembersTree;
 using OmniSharp.Models.Navigate;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Helpers
 {
@@ -38,12 +39,12 @@ namespace OmniSharp.Helpers
             //If there is a closest node, use its line and column.
             //or if we are on the last node, adjust column.
             //if we are above the first or below the last node, do nothing.
-            if (closestNode != null)
+            if (closestNode is not null)
             {
                 response.Line = closestNode.Location.Line;
                 response.Column = closestNode.Location.Column;
             }
-            else if (thisNode != null)
+            else if (thisNode is not null)
             {
                 response.Column = thisNode.Location.Column;
             }
@@ -52,12 +53,12 @@ namespace OmniSharp.Helpers
 
         public static bool IsCloserNodeUp(FileMemberElement candidateClosestNode, FileMemberElement closestNode, Request request)
         {
-            return ((candidateClosestNode.Location.Line < request.Line) && (closestNode == null || candidateClosestNode.Location.Line > closestNode.Location.Line));
+            return ((candidateClosestNode.Location.Line < request.Line) && (closestNode is null || candidateClosestNode.Location.Line > closestNode.Location.Line));
         }
 
         public static bool IsCloserNodeDown(FileMemberElement candidateClosestNode, FileMemberElement closestNode, Request request)
         {
-            return ((candidateClosestNode.Location.Line > request.Line) && (closestNode == null || candidateClosestNode.Location.Line < closestNode.Location.Line));
+            return ((candidateClosestNode.Location.Line > request.Line) && (closestNode is null || candidateClosestNode.Location.Line < closestNode.Location.Line));
         }
     }
 }

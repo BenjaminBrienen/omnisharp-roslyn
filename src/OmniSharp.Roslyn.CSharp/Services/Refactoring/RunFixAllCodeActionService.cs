@@ -19,8 +19,9 @@ using OmniSharp.Roslyn.CodeActions;
 using OmniSharp.Roslyn.CSharp.Services.Refactoring.V2;
 using OmniSharp.Roslyn.CSharp.Workers.Diagnostics;
 using OmniSharp.Services;
-using FixAllScope = OmniSharp.Abstractions.Models.V1.FixAll.FixAllScope;
+using FixAllScope = OmniSharp.Models.V1.FixAll.FixAllScope;
 using RoslynFixAllScope = Microsoft.CodeAnalysis.CodeFixes.FixAllScope;
+using OmniSharp.Models.V1.FixAll;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
 {
@@ -149,7 +150,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
                 ImmutableArray.Create(primaryDiagnostic),
                 (a, _) =>
                 {
-                    if (action == null)
+                    if (action is null)
                     {
                         action = a;
                     }
@@ -181,7 +182,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
 
             _logger.LogTrace("Finding FixAll fix for {0}.", diagnosticId);
             var fixes = await fixAllProvider.GetFixAsync(fixAllContext);
-            if (fixes == null)
+            if (fixes is null)
             {
                 _logger.LogInformation("FixAll not found for {0}.", diagnosticId);
                 return originalDoc;

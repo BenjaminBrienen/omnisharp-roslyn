@@ -2,7 +2,8 @@ using System.Composition;
 using System.Threading.Tasks;
 using Cake.Scripting.Abstractions.Models;
 using OmniSharp.Mef;
-using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Models.V1.UpdateBuffer;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Buffer
 {
@@ -23,7 +24,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Buffer
 
         public async Task<object> Handle(UpdateBufferRequest request)
         {
-            if (request.FileName == null)
+            if (request.FileName is null)
             {
                 return true;
             }
@@ -33,7 +34,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Buffer
                 FileName = request.FileName
             };
 
-            if(request.Changes != null)
+            if(request.Changes is not null)
             {
                 foreach(var change in request.Changes)
                 {

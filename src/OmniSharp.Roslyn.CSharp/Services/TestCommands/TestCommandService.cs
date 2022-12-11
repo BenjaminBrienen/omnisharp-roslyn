@@ -34,7 +34,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.TestCommands
 
             var document = _workspace.GetDocument(request.FileName);
             var response = new GetTestCommandResponse();
-            if (document != null)
+            if (document is not null)
             {
                 var semanticModel = await document.GetSemanticModelAsync();
                 var syntaxTree = semanticModel.SyntaxTree;
@@ -45,7 +45,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.TestCommands
                 SyntaxNode method = node.FirstAncestorOrSelf<MethodDeclarationSyntax>();
                 SyntaxNode type = GetTypeDeclaration(node);
 
-                if (type == null)
+                if (type is null)
                 {
                     return response;
                 }
@@ -55,7 +55,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.TestCommands
 
                 response.TestCommand = _testCommandProviders
                     .Select(t => t.GetTestCommand(context))
-                    .FirstOrDefault(c => c != null);
+                    .FirstOrDefault(c => c is not null);
 
                 var directory = Path.GetDirectoryName(document.Project.FilePath);
                 response.Directory = directory;
@@ -68,7 +68,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.TestCommands
         {
             var type = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 
-            if (type == null)
+            if (type is null)
             {
                 type = node.SyntaxTree.GetRoot()
                         .DescendantNodes().OfType<ClassDeclarationSyntax>()

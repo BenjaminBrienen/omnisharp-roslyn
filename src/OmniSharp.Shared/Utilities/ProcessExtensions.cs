@@ -46,14 +46,14 @@ namespace OmniSharp.Utilities
                 // In mono 3.10, the Exited event fires immediately, we're going to poll instead
                 lock (gate)
                 {
-                    if (s_watchedProcesses == null)
+                    if (s_watchedProcesses is null)
                     {
                         s_watchedProcesses = new List<(Process process, Action action)>();
                     }
 
                     s_watchedProcesses.Add((process, action));
 
-                    if (s_backgroundWatcher == null)
+                    if (s_backgroundWatcher is null)
                     {
                         s_backgroundWatcher = new Thread(Watcher) { IsBackground = true };
                         s_backgroundWatcher.Start();

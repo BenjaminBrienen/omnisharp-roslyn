@@ -25,7 +25,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Formatting
         public async Task<CodeFormatResponse> Handle(CodeFormatRequest request)
         {
             var document = _workspace.GetDocument(request.FileName);
-            if (document == null)
+            if (document is null)
             {
                 return null;
             }

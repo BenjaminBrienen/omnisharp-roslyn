@@ -11,9 +11,10 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OmniSharp.Extensions;
+using OmniSharp.LoggingExtensions;
 using OmniSharp.Mef;
-using OmniSharp.Models;
-using OmniSharp.Models.v1.InlayHints;
+using OmniSharp.Models.V1;
+using OmniSharp.Models.V1.InlayHints;
 using OmniSharp.Options;
 using OmniSharp.Roslyn.CSharp.Helpers;
 using OmniSharp.Roslyn.Utilities;
@@ -48,7 +49,7 @@ internal class InlayHintService :
     public async Task<InlayHintResponse> Handle(InlayHintRequest request)
     {
         var document = _workspace.GetDocument(request.Location.FileName);
-        if (document == null)
+        if (document is null)
         {
             _logger.Log(LogLevel.Warning, $"Inlay hints requested for document not in workspace {request.Location}");
             return InlayHintResponse.None;

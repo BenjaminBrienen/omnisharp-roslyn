@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using OmniSharp.Models.V1;
 
-namespace OmniSharp.Models
-{
-    public class Request : SimpleFileRequest
-    {
-        [JsonConverter(typeof(ZeroBasedIndexConverter))]
-        public int Line { get; set; }
-        [JsonConverter(typeof(ZeroBasedIndexConverter))]
-        public int Column { get; set; }
-        public string Buffer { get; set; }
-        public IEnumerable<LinePositionSpanTextChange> Changes { get; set; }
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
-        public bool ApplyChangesTogether { get; set; }
-    }
-}
+namespace OmniSharp.Models;
+
+public record Request
+(
+    [JsonConverter(typeof(ZeroBasedIndexConverter))]
+    int Line,
+    [JsonConverter(typeof(ZeroBasedIndexConverter))]
+    int Column,
+    string Buffer,
+    IEnumerable<LinePositionSpanTextChange> Changes,
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+    bool ApplyChangesTogether,
+    string FileName
+) : SimpleFileRequest(FileName);

@@ -24,7 +24,7 @@ namespace OmniSharp.Utilities
 
             protected override void DisposeCore(bool disposing)
             {
-                if (_changeTokens == null) return;
+                if (_changeTokens is null) return;
                 foreach (var kvp in _changeTokens)
                 {
                     kvp.Value.Dispose();
@@ -57,7 +57,7 @@ namespace OmniSharp.Utilities
 
                 lock (_gate)
                 {
-                    if (_changeTokens == null)
+                    if (_changeTokens is null)
                     {
                         _changeTokens = new Dictionary<string, PollingFileChangeToken>(StringComparer.OrdinalIgnoreCase);
                     }

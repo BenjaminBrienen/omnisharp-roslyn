@@ -34,7 +34,7 @@ namespace OmniSharp.Roslyn
             if (project.IsSubmission)
             {
                 metadataProject = project.Solution.Projects.FirstOrDefault(x => x.Name == MetadataKey);
-                if (metadataProject == null)
+                if (metadataProject is null)
                 {
                     metadataProject = project.Solution.AddProject(MetadataKey, $"{MetadataKey}.dll", LanguageNames.CSharp)
                         .WithCompilationOptions(project.CompilationOptions)

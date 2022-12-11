@@ -153,7 +153,7 @@ namespace OmniSharp.Roslyn.CSharp.Workers.Diagnostics
             var throttler = new SemaphoreSlim(_options.RoslynExtensionsOptions.DiagnosticWorkersThreadCount);
             foreach (var document in documents)
             {
-                if(document?.Project?.Name == null)
+                if(document?.Project?.Name is null)
                     continue;
 
                 var projectName = document.Project.Name;

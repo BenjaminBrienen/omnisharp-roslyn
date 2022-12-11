@@ -10,12 +10,12 @@ using Microsoft.CodeAnalysis.Recommendations;
 using Microsoft.CodeAnalysis.Text;
 using OmniSharp.Extensions;
 using OmniSharp.Mef;
-using OmniSharp.Models.AutoComplete;
 using OmniSharp.Options;
 using OmniSharp.Roslyn.CSharp.Services.Documentation;
 using OmniSharp.Roslyn.CSharp.Services.Completion;
 using CompletionService = Microsoft.CodeAnalysis.Completion.CompletionService;
 using System.Threading;
+using OmniSharp.Models.V1.AutoComplete;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Intellisense
 {
@@ -53,7 +53,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Intellisense
                     ForceExpandedCompletionIndexCreation: false);
                 var completionList = await OmniSharpCompletionService.GetCompletionsAsync(service, document, position, trigger: default, roles: null, options, CancellationToken.None);
 
-                if (completionList != null)
+                if (completionList is not null)
                 {
                     // Only trigger on space if Roslyn has object creation items
                     if (request.TriggerCharacter == " " && !completionList.Items.Any(i => i.GetProviderName() is CompletionListBuilder.ObjectCreationCompletionProvider))
@@ -65,7 +65,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Intellisense
                     var semanticModel = await document.GetSemanticModelAsync();
                     var recommendedSymbols = (await Recommender.GetRecommendedSymbolsAtPositionAsync(semanticModel, position, _workspace)).ToArray();
 
-                    var isSuggestionMode = completionList.SuggestionModeItem != null;
+                    var isSuggestionMode = completionList.SuggestionModeItem is not null;
                     foreach (var item in completionList.Items)
                     {
                         var completionText = item.DisplayText;
@@ -90,7 +90,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Intellisense
                                         completionText = symbol.Name;
                                     }
 
-                                    if (symbol != null)
+                                    if (symbol is not null)
                                     {
                                         if (request.WantSnippet)
                                         {

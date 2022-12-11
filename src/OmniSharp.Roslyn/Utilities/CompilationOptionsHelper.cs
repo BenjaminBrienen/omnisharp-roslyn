@@ -22,7 +22,7 @@ namespace OmniSharp.Helpers
 
         public static ImmutableDictionary<string, ReportDiagnostic> GetDefaultSuppressedDiagnosticOptions(IEnumerable<string> suppressedDiagnosticIds)
         {
-            if (suppressedDiagnosticIds == null || !suppressedDiagnosticIds.Any()) return GetDefaultSuppressedDiagnosticOptions();
+            if (suppressedDiagnosticIds is null || !suppressedDiagnosticIds.Any()) return GetDefaultSuppressedDiagnosticOptions();
 
             var suppressedDiagnostics = suppressedDiagnosticIds.Distinct().ToDictionary(d => d, d => ReportDiagnostic.Suppress);
             foreach (var diagnostic in defaultSuppressedDiagnostics)
@@ -38,7 +38,7 @@ namespace OmniSharp.Helpers
 
         public static ImmutableDictionary<string, ReportDiagnostic> GetDefaultSuppressedDiagnosticOptions(Dictionary<string, ReportDiagnostic> otherDiagnostics)
         {
-            if (otherDiagnostics == null || !otherDiagnostics.Any()) return GetDefaultSuppressedDiagnosticOptions();
+            if (otherDiagnostics is null || !otherDiagnostics.Any()) return GetDefaultSuppressedDiagnosticOptions();
 
             var combinedDiagnostics = GetDefaultSuppressedDiagnosticOptions();
             foreach (var diagnostic in otherDiagnostics)

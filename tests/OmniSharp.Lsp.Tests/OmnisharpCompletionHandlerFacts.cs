@@ -76,7 +76,7 @@ namespace OmniSharp.Lsp.Tests
             var completions = await FindCompletionsAsync(filename, input);
             Assert.Contains("foo", completions.Items.Select(c => c.Label));
             Assert.Contains("foo", completions.Items.Select(c => c.TextEdit.TextEdit.NewText));
-            Assert.Equal(CompletionItemKind.Variable, completions.Items.First(c => c.TextEdit.TextEdit.NewText == "foo").Kind);
+            Assert.Equal(CompletionItemKind.Variable, completions.Items.First(c => c.TextEdit.TextEdit.NewText is "foo").Kind);
         }
 
         [Theory]
@@ -99,7 +99,7 @@ namespace OmniSharp.Lsp.Tests
             var completions = await FindCompletionsAsync(filename, input);
             Assert.All(completions.Items, c => Assert.Null(c.Documentation));
 
-            var fooCompletion = completions.Items.Single(c => c.Label == "Foo");
+            var fooCompletion = completions.Items.Single(c => c.Label is "Foo");
             var resolvedCompletion = await ResolveCompletionAsync(fooCompletion);
             Assert.Equal("```csharp\nvoid Class1.Foo([int bar = 1])\n```\n\nSome Text", resolvedCompletion.Documentation.MarkupContent.Value);
             Assert.Equal(MarkupKind.Markdown, resolvedCompletion.Documentation.MarkupContent.Kind);
@@ -194,8 +194,8 @@ namespace OmniSharp.Lsp.Tests
 
             await EnableImportCompletion();
             var completions = await FindCompletionsWithImportedAsync(filename, input);
-            CompletionItem localCompletion = completions.Items.First(c => c.TextEdit.TextEdit.NewText == "guid");
-            CompletionItem typeCompletion = completions.Items.First(c => c.TextEdit.TextEdit.NewText == "Guid");
+            CompletionItem localCompletion = completions.Items.First(c => c.TextEdit.TextEdit.NewText is "guid");
+            CompletionItem typeCompletion = completions.Items.First(c => c.TextEdit.TextEdit.NewText is "Guid");
             Assert.True(localCompletion.Data.ToObject<(long, int)>().Item2 < typeCompletion.Data.ToObject<(long, int)>().Item2);
             Assert.StartsWith("0", localCompletion.SortText);
             Assert.StartsWith("1", typeCompletion.SortText);
@@ -262,7 +262,7 @@ namespace N2
 
             await EnableImportCompletion();
             var completions = await FindCompletionsWithImportedAsync(filename, input);
-            var resolved = await ResolveCompletionAsync(completions.Items.First(c => c.TextEdit.TextEdit.NewText == "Test"));
+            var resolved = await ResolveCompletionAsync(completions.Items.First(c => c.TextEdit.TextEdit.NewText is "Test"));
 
             Assert.Single(resolved.AdditionalTextEdits);
             var additionalEdit = resolved.AdditionalTextEdits.First();
@@ -283,7 +283,7 @@ namespace N2
 
             await EnableImportCompletion();
             var completions = await FindCompletionsWithImportedAsync(filename, input);
-            var resolved = await ResolveCompletionAsync(completions.Items.Last(c => c.TextEdit.TextEdit.NewText == "Console"));
+            var resolved = await ResolveCompletionAsync(completions.Items.Last(c => c.TextEdit.TextEdit.NewText is "Console"));
 
             Assert.Single(resolved.AdditionalTextEdits);
             var additionalEdit = resolved.AdditionalTextEdits.First();
@@ -324,7 +324,7 @@ namespace N2
 
             await EnableImportCompletion();
             var completions = await FindCompletionsWithImportedAsync(filename, input);
-            var resolved = await ResolveCompletionAsync(completions.Items.First(c => c.TextEdit.TextEdit.NewText == "Guid"));
+            var resolved = await ResolveCompletionAsync(completions.Items.First(c => c.TextEdit.TextEdit.NewText is "Guid"));
 
             Assert.Single(resolved.AdditionalTextEdits);
             var additionalEdit = resolved.AdditionalTextEdits.First();
@@ -371,7 +371,7 @@ namespace N3
 
             await EnableImportCompletion();
             var completions = await FindCompletionsWithImportedAsync(filename, input);
-            var resolved = await ResolveCompletionAsync(completions.Items.First(c => c.TextEdit.TextEdit.NewText == "C2"));
+            var resolved = await ResolveCompletionAsync(completions.Items.First(c => c.TextEdit.TextEdit.NewText is "C2"));
 
             Assert.Single(resolved.AdditionalTextEdits);
             var additionalEdit = resolved.AdditionalTextEdits.First();
@@ -434,7 +434,7 @@ namespace N3
             var completions = await FindCompletionsAsync(filename, input);
             Assert.All(completions.Items, c => Assert.Null(c.Documentation));
 
-            var fooCompletion = completions.Items.Single(c => c.Label == "NewGuid");
+            var fooCompletion = completions.Items.Single(c => c.Label is "NewGuid");
             var resolvedCompletion = await ResolveCompletionAsync(fooCompletion);
             Assert.Equal("```csharp\nSystem.Guid System.Guid.NewGuid()\n```", resolvedCompletion.Documentation.MarkupContent.Value);
             Assert.Equal(MarkupKind.Markdown, resolvedCompletion.Documentation.MarkupContent.Kind);
@@ -456,8 +456,8 @@ namespace N3
                     }";
 
             var completions = await FindCompletionsAsync(filename, input);
-            Assert.Contains(completions.Items, c => c.Label == "myvar");
-            Assert.Contains(completions.Items, c => c.Label == "MyClass1");
+            Assert.Contains(completions.Items, c => c.Label is "myvar");
+            Assert.Contains(completions.Items, c => c.Label is "MyClass1");
             Assert.All(completions.Items, c => Assert.False(c.Preselect));
         }
 
@@ -477,8 +477,8 @@ namespace N3
                     }";
 
             var completions = await FindCompletionsAsync(filename, input);
-            Assert.Contains(completions.Items, c => c.Label == "myvar");
-            Assert.Contains(completions.Items, c => c.Label == "MyClass1");
+            Assert.Contains(completions.Items, c => c.Label is "myvar");
+            Assert.Contains(completions.Items, c => c.Label is "MyClass1");
             Assert.All(completions.Items, c => Assert.False(c.Preselect));
         }
 
@@ -514,8 +514,8 @@ namespace N3
                     public class Foo {}";
 
             var completions = await FindCompletionsAsync(filename, source);
-            Assert.Contains(completions.Items, c => c.Label == "Bar");
-            Assert.Contains(completions.Items, c => c.TextEdit.TextEdit.NewText == "Bar");
+            Assert.Contains(completions.Items, c => c.Label is "Bar");
+            Assert.Contains(completions.Items, c => c.TextEdit.TextEdit.NewText is "Bar");
             Assert.All(completions.Items, c => Assert.False(c.Preselect));
         }
 
@@ -566,12 +566,12 @@ namespace N3
                 ";
 
             var completions = await FindCompletionsAsync(filename, source);
-            var item = completions.Items.First(c => c.Label == "text:");
+            var item = completions.Items.First(c => c.Label is "text:");
             Assert.NotNull(item);
             Assert.Equal("text", item.TextEdit.TextEdit.NewText);
             Assert.All(completions.Items, c =>
             {
-                if (c.Label == "ToString")
+                if (c.Label is "ToString")
                     Assert.True(c.Preselect);
                 else
                     Assert.False(c.Preselect);
@@ -1100,7 +1100,7 @@ class C
                 ";
 
             var completions = await FindCompletionsAsync(filename, source);
-            Assert.Contains(completions.Items, c => c.Label == "MyClass1");
+            Assert.Contains(completions.Items, c => c.Label is "MyClass1");
             Assert.All(completions.Items, c => Assert.False(c.Preselect));
         }
 
@@ -1155,8 +1155,8 @@ class C
                 "Prin$$";
 
             var completions = await FindCompletionsAsync("dummy.csx", source);
-            Assert.Contains(completions.Items, c => c.Label == "Print");
-            Assert.Contains(completions.Items, c => c.Label == "PrintOptions");
+            Assert.Contains(completions.Items, c => c.Label is "Print");
+            Assert.Contains(completions.Items, c => c.Label is "PrintOptions");
         }
 
         [Theory]
@@ -1272,8 +1272,8 @@ class C
                 ";
 
             var completions = await FindCompletionsAsync("dummy.csx", source);
-            Assert.Contains(completions.Items, c => c.Label == "number1");
-            Assert.Contains(completions.Items, c => c.Label == "number2");
+            Assert.Contains(completions.Items, c => c.Label is "number1");
+            Assert.Contains(completions.Items, c => c.Label is "number2");
             Assert.All(completions.Items, c => Assert.False(c.Preselect));
         }
 
@@ -1293,7 +1293,7 @@ class C
                 ";
 
             var completions = await FindCompletionsAsync("dummy.csx", source);
-            Assert.Contains(completions.Items, c => c.Label == "myValue");
+            Assert.Contains(completions.Items, c => c.Label is "myValue");
             Assert.All(completions.Items, c => Assert.False(c.Preselect));
         }
 
@@ -1315,8 +1315,8 @@ class C
                 ";
 
             var completions = await FindCompletionsAsync("dummy.csx", source);
-            Assert.Contains(completions.Items, c => c.Label == "PositionX");
-            Assert.Contains(completions.Items, c => c.Label == "PositionY");
+            Assert.Contains(completions.Items, c => c.Label is "PositionX");
+            Assert.Contains(completions.Items, c => c.Label is "PositionY");
             Assert.All(completions.Items, c => Assert.False(c.Preselect));
         }
 

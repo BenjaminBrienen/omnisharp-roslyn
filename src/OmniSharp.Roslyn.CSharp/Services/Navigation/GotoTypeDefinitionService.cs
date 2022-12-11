@@ -3,12 +3,12 @@
 using Microsoft.CodeAnalysis;
 using OmniSharp.Extensions;
 using OmniSharp.Mef;
-using OmniSharp.Models.GotoTypeDefinition;
 using OmniSharp.Options;
 using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using OmniSharp.Models;
+using OmniSharp.Models.V2.GotoTypeDefinition;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Navigation
 {
@@ -34,7 +34,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
             var document = externalSourceService.FindDocumentInCache(request.FileName) ??
                 _workspace.GetDocument(request.FileName);
 
-            if (document == null)
+            if (document is null)
             {
                 return new GotoTypeDefinitionResponse();
             }

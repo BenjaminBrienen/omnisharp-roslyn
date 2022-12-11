@@ -60,7 +60,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.CodeActions
 
         private static bool ExistsInAssemblyList(string typeName, Assembly[] assemblies)
         {
-            return assemblies.Any(a => a.GetType(typeName) == null);
+            return assemblies.Any(a => a.GetType(typeName) is null);
         }
 
         [ImportingConstructor]

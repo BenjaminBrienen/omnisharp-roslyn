@@ -25,7 +25,7 @@ namespace OmniSharp.MSBuild.SolutionParsing
 
             _currentLineNumber++;
 
-            if (line != null)
+            if (line is not null)
             {
                 line = line.Trim();
             }

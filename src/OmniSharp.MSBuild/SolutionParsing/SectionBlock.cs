@@ -31,7 +31,7 @@ namespace OmniSharp.MSBuild.SolutionParsing
             var properties = ImmutableArray.CreateBuilder<Property>();
 
             string line;
-            while ((line = scanner.NextLine()) != null)
+            while ((line = scanner.NextLine()) is not null)
             {
                 if (line.StartsWith(endSection, StringComparison.Ordinal))
                 {
@@ -39,7 +39,7 @@ namespace OmniSharp.MSBuild.SolutionParsing
                 }
 
                 var property = Property.Parse(line);
-                if (property != null)
+                if (property is not null)
                 {
                     properties.Add(property);
                 }

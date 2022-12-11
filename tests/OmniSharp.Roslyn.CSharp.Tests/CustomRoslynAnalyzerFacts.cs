@@ -79,7 +79,7 @@ namespace OmniSharp.Roslyn.CSharp.Tests
             private void AnalyzeSymbol(SymbolAnalysisContext context)
             {
                 var namedTypeSymbol = (INamedTypeSymbol)context.Symbol;
-                if (namedTypeSymbol.Name == "_this_is_invalid_test_class_name")
+                if (namedTypeSymbol.Name is "_this_is_invalid_test_class_name")
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
                         Rule,
@@ -157,7 +157,7 @@ namespace OmniSharp.Roslyn.CSharp.Tests
 
                 var result = await host.RequestCodeCheckAsync(testFile.FileName);
 
-                Assert.Contains(result.QuickFixes.OfType<DiagnosticLocation>(), f => f.Id == "CS0162" && f.LogLevel == "Hidden");
+                Assert.Contains(result.QuickFixes.OfType<DiagnosticLocation>(), f => f.Id is "CS0162" && f.LogLevel is "Hidden");
             }
         }
 
@@ -178,7 +178,7 @@ namespace OmniSharp.Roslyn.CSharp.Tests
                 var result = await host.RequestCodeCheckAsync("testFile_2.cs");
 
                 var bar = result.QuickFixes.ToList();
-                Assert.Contains(result.QuickFixes.OfType<DiagnosticLocation>(), f => f.Id == testAnalyzerRef.Id.ToString() && f.LogLevel == "Hidden");
+                Assert.Contains(result.QuickFixes.OfType<DiagnosticLocation>(), f => f.Id == testAnalyzerRef.Id.ToString() && f.LogLevel is "Hidden");
             }
         }
 
@@ -289,7 +289,7 @@ namespace OmniSharp.Roslyn.CSharp.Tests
                 else
                     Assert.Contains(result.QuickFixes.OfType<DiagnosticLocation>(), f => f.Id == testAnalyzerRef.Id.ToString());
 
-                Assert.Contains(result.QuickFixes.OfType<DiagnosticLocation>(), f => f.Id == "CS0029");
+                Assert.Contains(result.QuickFixes.OfType<DiagnosticLocation>(), f => f.Id is "CS0029");
             }
         }
 

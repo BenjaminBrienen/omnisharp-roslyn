@@ -9,12 +9,15 @@ using OmniSharp.Models.Navigate;
 using OmniSharp.Models.MembersTree;
 using OmniSharp.Models.Rename;
 using OmniSharp.Models.SemanticHighlight;
-using OmniSharp.Models.v1.Completion;
+using OmniSharp.Models.V1.Completion;
 using OmniSharp.Models.V2;
 using OmniSharp.Models.V2.CodeActions;
 using OmniSharp.Models.V2.CodeStructure;
 using OmniSharp.Utilities;
 using Range = OmniSharp.Models.V2.Range;
+using OmniSharp.Models.V1;
+using OmniSharp.Roslyn;
+using OmniSharp.Models.V2.SemanticHighlight;
 
 namespace OmniSharp.Cake.Extensions
 {
@@ -22,7 +25,7 @@ namespace OmniSharp.Cake.Extensions
     {
         public static QuickFixResponse OnlyThisFile(this QuickFixResponse response, string fileName)
         {
-            if (response?.QuickFixes == null)
+            if (response?.QuickFixes is null)
             {
                 return response;
             }
@@ -113,7 +116,7 @@ namespace OmniSharp.Cake.Extensions
         public static async Task<RunCodeActionResponse> TranslateAsync(this RunCodeActionResponse response,
             OmniSharpWorkspace workspace)
         {
-            if (response?.Changes == null)
+            if (response?.Changes is null)
             {
                 return response;
             }
@@ -175,7 +178,7 @@ namespace OmniSharp.Cake.Extensions
 
         public static async Task<BlockStructureResponse> TranslateAsync(this BlockStructureResponse response, OmniSharpWorkspace workspace, SimpleFileRequest request)
         {
-            if (response?.Spans == null)
+            if (response?.Spans is null)
             {
                 return response;
             }
@@ -407,11 +410,11 @@ namespace OmniSharp.Cake.Extensions
 
         private static bool PathsAreEqual(string x, string y)
         {
-            if (x == null && y == null)
+            if (x is null && y is null)
             {
                 return true;
             }
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
                 return false;
             }

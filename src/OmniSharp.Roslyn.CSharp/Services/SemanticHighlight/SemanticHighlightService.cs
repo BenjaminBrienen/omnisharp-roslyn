@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Mef;
 using OmniSharp.Models.SemanticHighlight;
+using OmniSharp.Models.V2.SemanticHighlight;
 
 namespace OmniSharp.Roslyn.CSharp.Services.SemanticHighlight
 {
@@ -29,7 +30,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.SemanticHighlight
         {
             var document = _workspace.GetDocuments(request.FileName).FirstOrDefault();
 
-            if (document == null)
+            if (document is null)
             {
                 return new SemanticHighlightResponse() { Spans = Array.Empty<SemanticHighlightSpan>() };
             }
@@ -38,7 +39,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.SemanticHighlight
 
             var project = document.Project.Name;
 
-            var highlightDocument = request.VersionedText != null
+            var highlightDocument = request.VersionedText is not null
                 ? document.WithText(SourceText.From(request.VersionedText))
                 : document;
 

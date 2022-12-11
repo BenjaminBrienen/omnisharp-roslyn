@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net472;netstandard2.0</TargetFrameworks>
+    <LanguageVersion>latest</LanguageVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <RootNamespace>OmniSharp</RootNamespace>
+    <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>

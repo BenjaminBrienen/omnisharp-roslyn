@@ -52,12 +52,12 @@ namespace OmniSharp.FileWatching
 
         public void Watch(string pathOrExtension, FileSystemNotificationCallback callback)
         {
-            if (pathOrExtension == null)
+            if (pathOrExtension is null)
             {
                 throw new ArgumentNullException(nameof(pathOrExtension));
             }
 
-            if (callback == null)
+            if (callback is null)
             {
                 throw new ArgumentNullException(nameof(callback));
             }

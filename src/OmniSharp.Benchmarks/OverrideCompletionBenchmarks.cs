@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
-using OmniSharp.Models.v1.Completion;
+using OmniSharp.Models.V1.Completion;
 using OmniSharp.Roslyn.CSharp.Services.Completion;
 using System.Collections.Generic;
 using System.Text;
@@ -51,7 +51,7 @@ namespace OmniSharp.Benchmarks
 
             Request = new()
             {
-                CompletionTrigger = OmniSharp.Models.v1.Completion.CompletionTriggerKind.Invoked,
+                CompletionTrigger = OmniSharp.Models.V1.Completion.CompletionTriggerKind.Invoked,
                 Line = point.Line,
                 Column = point.Offset,
                 FileName = FileName

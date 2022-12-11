@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 
-namespace OmniSharp.Models.Events
-{
-    public class UnresolvedDependenciesMessage
-    {
-        public string FileName { get; set; }
+namespace OmniSharp.Models.Events;
 
-        public IEnumerable<PackageDependency> UnresolvedDependencies { get; set; }
-    }
-}
+public record UnresolvedDependenciesMessage
+(
+    string FileName,
+    IEnumerable<PackageDependency> UnresolvedDependencies
+);

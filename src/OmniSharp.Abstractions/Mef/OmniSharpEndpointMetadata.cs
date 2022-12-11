@@ -1,16 +1,12 @@
 ﻿using System;
 
-namespace OmniSharp.Mef
-{
-    public class OmniSharpEndpointMetadata
-    {
-        public string EndpointName { get; set; }
-        public Type RequestType { get; set; }
-        public Type ResponseType { get; set; }
+namespace OmniSharp.Mef;
 
-        public override string ToString()
-        {
-            return $"{{{nameof(EndpointName)} = {EndpointName}, {nameof(RequestType)} = {RequestType.FullName}, {nameof(ResponseType)} = {ResponseType.FullName}}}";
-        }
-    }
+public record OmniSharpEndpointMetadata
+(
+    string EndpointName,
+    Type RequestType,
+    Type ResponseType)
+{
+    public override string ToString() => $"{{{nameof(EndpointName)} = {EndpointName}, {nameof(RequestType)} = {RequestType.FullName}, {nameof(ResponseType)} = {ResponseType.FullName}}}";
 }

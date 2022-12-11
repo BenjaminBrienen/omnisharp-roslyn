@@ -1,10 +1,9 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
-            "taskName": "build",
+            "command": "",
+            "label": "build",
             "type": "process",
             "windows": {
                 "command": "${workspaceRoot}\\.dotnet\\dotnet.exe",
@@ -35,11 +34,11 @@
                 "focus": false,
                 "panel": "shared"
             },
-            // Use the standard MS compiler pattern to detect errors, warnings and infos
             "problemMatcher": "$msCompile"
         },
         {
-            "taskName": "restore",
+            "command": "",
+            "label": "restore",
             "type": "process",
             "windows": {
                 "command": "${workspaceRoot}\\.dotnet\\dotnet.exe"
@@ -61,7 +60,6 @@
                 "focus": false,
                 "panel": "shared"
             },
-            // Use the standard MS compiler pattern to detect errors, warnings and infos
             "problemMatcher": "$msCompile"
         },
         {

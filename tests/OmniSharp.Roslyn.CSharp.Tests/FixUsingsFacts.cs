@@ -1,29 +1,29 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using OmniSharp.Models;
-using OmniSharp.Models.FixUsings;
+using OmniSharp.Models.V1.FixUsings;
 using OmniSharp.Roslyn.CSharp.Services.Refactoring;
 using TestUtility;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace OmniSharp.Roslyn.CSharp.Tests
+namespace OmniSharp.Roslyn.CSharp.Tests;
+public class FixUsingsFacts : AbstractSingleRequestHandlerTestFixture<FixUsingService>
 {
-    public class FixUsingsFacts : AbstractSingleRequestHandlerTestFixture<FixUsingService>
+    private const string TestFileName = "test.cs";
+
+    public FixUsingsFacts(ITestOutputHelper output, SharedOmniSharpHostFixture sharedOmniSharpHostFixture)
+        : base(output, sharedOmniSharpHostFixture)
     {
-        private const string TestFileName = "test.cs";
+    }
 
-        public FixUsingsFacts(ITestOutputHelper output, SharedOmniSharpHostFixture sharedOmniSharpHostFixture)
-            : base(output, sharedOmniSharpHostFixture)
-        {
-        }
+    protected override string EndpointName => OmniSharpEndpoints.FixUsings;
 
-        protected override string EndpointName => OmniSharpEndpoints.FixUsings;
-
-        [Fact]
-        public async Task FixUsings_AddsUsingSingle()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsAddsUsingSingleAsync()
+    {
+        const string code = @"
 namespace nsA
 {
     public class classX{}
@@ -40,7 +40,7 @@ namespace OmniSharp
     }
 }";
 
-            const string expectedCode = @"
+        const string expectedCode = @"
 using nsA;
 
 namespace nsA
@@ -59,13 +59,13 @@ namespace OmniSharp
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_AddsUsingSingleForFrameworkMethod()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsAddsUsingSingleForFrameworkMethodAsync()
+    {
+        const string code = @"
 namespace OmniSharp
 {
     public class class1
@@ -77,7 +77,7 @@ namespace OmniSharp
     }
 }";
 
-            string expectedCode = @"
+        string expectedCode = @"
 using System;
 
 namespace OmniSharp
@@ -91,13 +91,13 @@ namespace OmniSharp
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_AddsUsingSingleForFrameworkClass()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsAddsUsingSingleForFrameworkClassAsync()
+    {
+        const string code = @"
 namespace OmniSharp
 {
     public class class1
@@ -109,7 +109,7 @@ namespace OmniSharp
     }
 }";
 
-            const string expectedCode = @"
+        const string expectedCode = @"
 using System.Text;
 
 namespace OmniSharp
@@ -123,13 +123,13 @@ namespace OmniSharp
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_AddsUsingMultiple()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsAddsUsingMultipleAsync()
+    {
+        const string code = @"
 namespace nsA
 {
     public class classX{}
@@ -152,7 +152,7 @@ namespace OmniSharp
     }
 }";
 
-            const string expectedCode = @"
+        const string expectedCode = @"
 using nsA;
 using nsB;
 
@@ -178,13 +178,13 @@ namespace OmniSharp
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_AddsUsingMultipleForFramework()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsAddsUsingMultipleForFrameworkAsync()
+    {
+        const string code = @"
 namespace OmniSharp
 {
     public class class1
@@ -197,7 +197,7 @@ namespace OmniSharp
     }
 }";
 
-            const string expectedCode = @"
+        const string expectedCode = @"
 using System;
 using System.Text;
 
@@ -213,13 +213,13 @@ namespace OmniSharp
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_ReturnsAmbiguousResult()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsReturnsAmbiguousResultAsync()
+    {
+        const string code = @"
 namespace nsA
 {
     public class classX{}
@@ -240,27 +240,27 @@ namespace OmniSharp
         }
     }
 }";
-            var content = TestContent.Parse(code);
-            var point = content.GetPointFromPosition();
+        var content = TestContent.Parse(code);
+        TextPoint point = content.GetPointFromPosition();
 
-            var expectedUnresolved = new[]
-            {
-                new QuickFix()
-                {
-                    Line = point.Line,
-                    Column = point.Offset,
-                    FileName = TestFileName,
-                    Text = "`classX` is ambiguous. Namespaces: using nsA; using nsB;",
-                }
-            };
-
-            await AssertUnresolvedReferencesAsync(content.Code, expectedUnresolved);
-        }
-
-        [Fact]
-        public async Task FixUsings_ReturnsNoUsingsForAmbiguousResult()
+        QuickFix[] expectedUnresolved = new[]
         {
-            const string code = @"
+            new QuickFix()
+            {
+                Line = point.Line,
+                Column = point.Offset,
+                FileName = TestFileName,
+                Text = "`classX` is ambiguous. Namespaces: using nsA; using nsB;",
+            }
+        };
+
+        await AssertUnresolvedReferencesAsync(content.Code, expectedUnresolved).ConfigureAwait(true);
+    }
+
+    [Fact]
+    public async Task FixUsingsReturnsNoUsingsForAmbiguousResultAsync()
+    {
+        const string code = @"
 namespace nsA {
     public class classX{}
 }
@@ -279,13 +279,13 @@ namespace OmniSharp {
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode: code);
-        }
+        await AssertBufferContentsAsync(code, expectedCode: code).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_AddsUsingForExtension()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsAddsUsingForExtensionAsync()
+    {
+        const string code = @"
 namespace nsA {
     public static class StringExtension {
         public static void Whatever(this string astring) {}
@@ -302,7 +302,7 @@ namespace OmniSharp {
     }
 }";
 
-            const string expectedCode = @"
+        const string expectedCode = @"
 using nsA;
 
 namespace nsA {
@@ -321,13 +321,13 @@ namespace OmniSharp {
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_AddsUsingLinqMethodSyntax()
-        {
-            const string code = @"namespace OmniSharp
+    [Fact]
+    public async Task FixUsingsAddsUsingLinqMethodSyntaxAsync()
+    {
+        const string code = @"namespace OmniSharp
 {
     public class class1
     {
@@ -339,7 +339,7 @@ namespace OmniSharp {
     }
 }";
 
-            const string expectedCode = @"using System.Collections.Generic;
+        const string expectedCode = @"using System.Collections.Generic;
 using System.Linq;
 
 namespace OmniSharp
@@ -354,13 +354,13 @@ namespace OmniSharp
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_AddsUsingLinqQuerySyntax()
-        {
-            const string code = @"namespace OmniSharp
+    [Fact]
+    public async Task FixUsingsAddsUsingLinqQuerySyntaxAsync()
+    {
+        const string code = @"namespace OmniSharp
 {
     public class class1
     {
@@ -375,7 +375,7 @@ namespace OmniSharp
      }
 }";
 
-            const string expectedCode = @"using System.Linq;
+        const string expectedCode = @"using System.Linq;
 namespace OmniSharp
 {
     public class class1
@@ -391,13 +391,13 @@ namespace OmniSharp
      }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_RemoveDuplicateUsing()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsRemoveDuplicateUsingAsync()
+    {
+        const string code = @"
 using System;
 using System;
 
@@ -412,7 +412,7 @@ namespace OmniSharp
     }
 }";
 
-            const string expectedCode = @"
+        const string expectedCode = @"
 using System;
 
 namespace OmniSharp
@@ -426,13 +426,13 @@ namespace OmniSharp
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        [Fact]
-        public async Task FixUsings_RemoveUnusedUsing()
-        {
-            const string code = @"
+    [Fact]
+    public async Task FixUsingsRemoveUnusedUsingAsync()
+    {
+        const string code = @"
 using System;
 using System.Linq;
 
@@ -447,7 +447,7 @@ namespace OmniSharp
     }
 }";
 
-            const string expectedCode = @"
+        const string expectedCode = @"
 using System;
 
 namespace OmniSharp
@@ -461,49 +461,45 @@ namespace OmniSharp
     }
 }";
 
-            await AssertBufferContentsAsync(code, expectedCode);
-        }
+        await AssertBufferContentsAsync(code, expectedCode).ConfigureAwait(true);
+    }
 
-        private async Task AssertBufferContentsAsync(string code, string expectedCode)
+    private async Task AssertBufferContentsAsync(string code, string expectedCode)
+    {
+        FixUsingsResponse response = await RunFixUsingsAsync(code).ConfigureAwait(true);
+        Assert.Equal(FlattenNewLines(expectedCode), FlattenNewLines(response.Buffer));
+    }
+
+    private static string FlattenNewLines(string input) => input.Replace("\r\n", "\n", StringComparison.Ordinal);
+
+    private async Task AssertUnresolvedReferencesAsync(string code, QuickFix[] expectedResults)
+    {
+        FixUsingsResponse response = await RunFixUsingsAsync(code).ConfigureAwait(true);
+        QuickFix[] results = response.AmbiguousResults.ToArray();
+
+        Assert.Equal(results.Length, expectedResults.Length);
+
+        for (int i = 0; i < results.Length; i++)
         {
-            var response = await RunFixUsingsAsync(code);
-            Assert.Equal(FlattenNewLines(expectedCode), FlattenNewLines(response.Buffer));
-        }
+            QuickFix result = results[i];
+            QuickFix expectedResult = expectedResults[i];
 
-        private static string FlattenNewLines(string input)
+            Assert.Equal(expectedResult.Line, result.Line);
+            Assert.Equal(expectedResult.Column, result.Column);
+            Assert.Equal(expectedResult.FileName, result.FileName);
+            Assert.Equal(expectedResult.Text, result.Text);
+        }
+    }
+
+    private async Task<FixUsingsResponse> RunFixUsingsAsync(string code)
+    {
+        SharedOmniSharpTestHost.AddFilesToWorkspace(new TestFile(TestFileName, code));
+        FixUsingService requestHandler = GetRequestHandler(SharedOmniSharpTestHost);
+        var request = new FixUsingsRequest
         {
-            return input.Replace("\r\n", "\n");
-        }
+            FileName = TestFileName
+        };
 
-        private async Task AssertUnresolvedReferencesAsync(string code, QuickFix[] expectedResults)
-        {
-            var response = await RunFixUsingsAsync(code);
-            var results = response.AmbiguousResults.ToArray();
-
-            Assert.Equal(results.Length, expectedResults.Length);
-
-            for (var i = 0; i < results.Length; i++)
-            {
-                var result = results[i];
-                var expectedResult = expectedResults[i];
-
-                Assert.Equal(expectedResult.Line, result.Line);
-                Assert.Equal(expectedResult.Column, result.Column);
-                Assert.Equal(expectedResult.FileName, result.FileName);
-                Assert.Equal(expectedResult.Text, result.Text);
-            }
-        }
-
-        private async Task<FixUsingsResponse> RunFixUsingsAsync(string code)
-        {
-            SharedOmniSharpTestHost.AddFilesToWorkspace(new TestFile(TestFileName, code));
-            var requestHandler = GetRequestHandler(SharedOmniSharpTestHost);
-            var request = new FixUsingsRequest
-            {
-                FileName = TestFileName
-            };
-
-            return await requestHandler.Handle(request);
-        }
+        return await requestHandler.Handle(request).ConfigureAwait(true);
     }
 }

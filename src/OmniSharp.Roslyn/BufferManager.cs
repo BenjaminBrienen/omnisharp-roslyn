@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using OmniSharp.FileWatching;
 using OmniSharp.Models;
 using OmniSharp.Models.ChangeBuffer;
-using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Models.V1.UpdateBuffer;
 
 namespace OmniSharp.Roslyn
 {
@@ -50,7 +50,7 @@ namespace OmniSharp.Roslyn
                 _logger.LogDebug("Read file contents:\n{0}", buffer);
             }
 
-            if (request.FileName == null || (buffer == null && changes == null))
+            if (request.FileName is null || (buffer is null && changes is null))
             {
                 return;
             }
@@ -60,7 +60,7 @@ namespace OmniSharp.Roslyn
             var documentIds = solution.GetDocumentIdsWithFilePath(request.FileName);
             if (!documentIds.IsEmpty)
             {
-                if (changes == null)
+                if (changes is null)
                 {
                     var sourceText = SourceText.From(buffer);
 
@@ -123,7 +123,7 @@ namespace OmniSharp.Roslyn
 
                 _workspace.TryApplyChanges(solution);
             }
-            else if (buffer != null)
+            else if (buffer is not null)
             {
                 _logger.LogDebug("Adding transient file for {0}\n{1}", request.FileName, buffer);
                 TryAddTransientDocument(request.FileName, buffer);
@@ -132,7 +132,7 @@ namespace OmniSharp.Roslyn
 
         public async Task UpdateBufferAsync(ChangeBufferRequest request)
         {
-            if (request.FileName == null)
+            if (request.FileName is null)
             {
                 return;
             }
@@ -176,7 +176,7 @@ namespace OmniSharp.Roslyn
             var projects = FindProjectsByFileName(fileName);
             if (!projects.Any())
             {
-                if (fileName.EndsWith(".cs") && _workspace.TryAddMiscellaneousDocument(fileName, LanguageNames.CSharp) != null)
+                if (fileName.EndsWith(".cs") && _workspace.TryAddMiscellaneousDocument(fileName, LanguageNames.CSharp) is not null)
                 {
                     _fileSystemWatcher.Watch(fileName, OnFileChanged);
                     return true;
@@ -239,7 +239,7 @@ namespace OmniSharp.Roslyn
                 fileName = args.OldSolution.GetDocument(args.DocumentId).FilePath;
             }
 
-            if (fileName == null)
+            if (fileName is null)
             {
                 return;
             }

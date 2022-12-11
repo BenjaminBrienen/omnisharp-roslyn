@@ -35,7 +35,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Decompilation
             if (project.IsSubmission)
             {
                 decompilationProject = project.Solution.Projects.FirstOrDefault(x => x.Name == DecompiledKey);
-                if (decompilationProject == null)
+                if (decompilationProject is null)
                 {
                     decompilationProject = project.Solution.AddProject(DecompiledKey, $"{DecompiledKey}.dll", LanguageNames.CSharp)
                         .WithCompilationOptions(project.CompilationOptions)

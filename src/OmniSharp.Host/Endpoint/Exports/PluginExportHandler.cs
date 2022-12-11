@@ -17,7 +17,7 @@ namespace OmniSharp.Endpoint.Exports
         public override int CompareTo(ExportHandler<TRequest, TResponse> other)
         {
             var otherPlugin = other as PluginExportHandler<TRequest, TResponse>;
-            if (otherPlugin == null)
+            if (otherPlugin is null)
             {
                 return 1;
             }

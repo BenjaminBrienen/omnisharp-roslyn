@@ -4,6 +4,8 @@ using OmniSharp.Cake.Extensions;
 using OmniSharp.Cake.Utilities;
 using OmniSharp.Mef;
 using OmniSharp.Models.SemanticHighlight;
+using OmniSharp.Models.V2.SemanticHighlight;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.SemanticHighlight;
 

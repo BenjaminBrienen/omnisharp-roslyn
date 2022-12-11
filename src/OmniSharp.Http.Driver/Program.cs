@@ -12,7 +12,7 @@ namespace OmniSharp.Http.Driver
             application.OnExecute(() =>
             {
                 var environment = application.CreateEnvironment();
-                Configuration.ZeroBasedIndices = application.ZeroBasedIndices;
+                Configuration.UseZeroBasedIndices = application.ZeroBasedIndices;
 
                 var writer = new SharedTextWriter(Console.Out);
                 var commandLinePlugins = new PluginAssemblies(application.Plugin);

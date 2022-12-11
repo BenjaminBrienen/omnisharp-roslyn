@@ -1,6 +1,8 @@
 ﻿using System.Composition;
 using OmniSharp.Mef;
 using OmniSharp.Models.SignatureHelp;
+using OmniSharp.Models.V1.SignatureHelp;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Signatures
 {

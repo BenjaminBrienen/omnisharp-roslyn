@@ -8,6 +8,7 @@ using OmniSharp.Helpers;
 using OmniSharp.Mef;
 using OmniSharp.Models;
 using OmniSharp.Models.GotoRegion;
+using OmniSharp.Models.V1;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Navigation
 {
@@ -27,7 +28,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
             var regions = new List<QuickFix>();
             var document = _workspace.GetDocument(request.FileName);
 
-            if (document != null)
+            if (document is not null)
             {
                 var root = await document.GetSyntaxRootAsync();
                 var regionTrivias = root.DescendantNodesAndTokens()

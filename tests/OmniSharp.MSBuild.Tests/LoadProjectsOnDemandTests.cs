@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using OmniSharp.Models;
 using OmniSharp.Models.MembersTree;
+using OmniSharp.Models.v1;
 using OmniSharp.Models.V2.CodeActions;
 using OmniSharp.MSBuild.Models;
 using OmniSharp.Options;

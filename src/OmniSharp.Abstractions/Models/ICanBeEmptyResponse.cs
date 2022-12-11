@@ -1,7 +1,6 @@
-﻿namespace OmniSharp.Models
+﻿namespace OmniSharp.Models;
+
+internal interface ICanBeEmptyResponse
 {
-    internal interface ICanBeEmptyResponse
-    {
-        bool IsEmpty { get; }
-    }
+    bool IsEmpty { get; }
 }

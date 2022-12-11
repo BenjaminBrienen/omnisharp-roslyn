@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using OmniSharp.Models;
+using OmniSharp.Models.V1;
 
 namespace OmniSharp.Roslyn.Utilities
 {

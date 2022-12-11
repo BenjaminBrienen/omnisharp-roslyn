@@ -14,7 +14,7 @@ namespace OmniSharp.Utilities
 
         public static ImmutableArray<T> AsImmutableOrNull<T>(this IEnumerable<T> items)
         {
-            if (items == null)
+            if (items is null)
                 return default;
  
             return ImmutableArray.CreateRange<T>(items);

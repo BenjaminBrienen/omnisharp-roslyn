@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using OmniSharp.Extensions;
 using OmniSharp.Models;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Helpers
 {
@@ -28,7 +29,7 @@ namespace OmniSharp.Helpers
 
             var generatedInfo = workspace.CurrentSolution.GetSourceGeneratedFileInfo(location);
 
-            var fileName = Path.IsPathRooted(lineSpan.Path) || generatedInfo != null
+            var fileName = Path.IsPathRooted(lineSpan.Path) || generatedInfo is not null
                 // If there is generated file information, the path is not rooted, but we don't want to try and locate it as it doesn't
                 // exist on disk
                 ? lineSpan.Path
@@ -55,7 +56,7 @@ namespace OmniSharp.Helpers
                 if (hasMappedPath)
                 {
                     SourceText source = null;
-                    if (documents != null && documents.FirstOrDefault(d => d != null && d.TryGetText(out source)) != null)
+                    if (documents is not null && documents.FirstOrDefault(d => d is not null && d.TryGetText(out source)) is not null)
                     {
                         // we have a mapped document that exists in workspace
                         return source;
@@ -73,7 +74,7 @@ namespace OmniSharp.Helpers
             static string GetLineText(Location location, SourceText sourceText, int startLine)
             {
                 // bounds check in case the mapping is incorrect, since user can put whatever line they want
-                if (sourceText != null && sourceText.Lines.Count > startLine)
+                if (sourceText is not null && sourceText.Lines.Count > startLine)
                 {
                     return sourceText.Lines[startLine].ToString();
                 }

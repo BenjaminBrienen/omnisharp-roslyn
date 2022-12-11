@@ -10,6 +10,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.LanguageServerProtocol.Handlers;
 using OmniSharp.Models;
 using OmniSharp.Models.Diagnostics;
+using OmniSharp.Models.V1;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace OmniSharp.LanguageServerProtocol

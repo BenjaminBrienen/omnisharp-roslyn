@@ -15,13 +15,13 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
         public static bool IsInStaticContext(this SyntaxNode node)
         {
             // this/base calls are always static.
-            if (node.FirstAncestorOrSelf<ConstructorInitializerSyntax>() != null)
+            if (node.FirstAncestorOrSelf<ConstructorInitializerSyntax>() is not null)
             {
                 return true;
             }
 
             var memberDeclaration = node.FirstAncestorOrSelf<MemberDeclarationSyntax>();
-            if (memberDeclaration == null)
+            if (memberDeclaration is null)
             {
                 return false;
             }
@@ -48,7 +48,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
             }
 
             // Global statements are not a static context.
-            if (node.FirstAncestorOrSelf<GlobalStatementSyntax>() != null)
+            if (node.FirstAncestorOrSelf<GlobalStatementSyntax>() is not null)
             {
                 return false;
             }
@@ -59,7 +59,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
 
         public static SyntaxTokenList GetModifiers(SyntaxNode member)
         {
-            if (member != null)
+            if (member is not null)
             {
                 switch (member.Kind())
                 {
@@ -106,7 +106,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
            where TParent : SyntaxNode
         {
             var ancestor = node.GetAncestor<TParent>();
-            if (ancestor == null)
+            if (ancestor is null)
             {
                 return false;
             }
@@ -121,7 +121,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
            where TNode : SyntaxNode
         {
             var current = node.Parent;
-            while (current != null)
+            while (current is not null)
             {
                 if (current is TNode tNode)
                 {
@@ -142,7 +142,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
         public static TNode FirstAncestorOrSelfUntil<TNode>(this SyntaxNode node, Func<SyntaxNode, bool> predicate)
             where TNode : SyntaxNode
         {
-            for (var current = node; current != null; current = current.GetParent())
+            for (var current = node; current is not null; current = current.GetParent())
             {
                 if (current is TNode tnode)
                 {
@@ -168,7 +168,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
             where TNode : SyntaxNode
         {
             var current = node;
-            while (current != null)
+            while (current is not null)
             {
                 if (current is TNode tNode)
                 {

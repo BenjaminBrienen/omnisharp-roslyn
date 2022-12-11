@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using OmniSharp.DotNetTest.Models;
 using OmniSharp.Eventing;
 using OmniSharp.Mef;
+using OmniSharp.Roslyn;
 using OmniSharp.Services;
 
 namespace OmniSharp.DotNetTest.Services
@@ -26,7 +27,7 @@ namespace OmniSharp.DotNetTest.Services
             {
                 return await testManager.DiscoverTestsAsync(request.RunSettings, request.TestFrameworkName, request.TargetFrameworkVersion, default(CancellationToken));
             }
-            
+
             throw new InvalidOperationException("The debugger could not be started");
         }
     }

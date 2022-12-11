@@ -33,7 +33,7 @@ namespace OmniSharp.Cake.Services
         {
             var (fileName, arguments) = GetMonoRuntime();
 
-            if (fileName == null)
+            if (fileName is null)
             {
                 // Something went wrong figurint out mono runtime,
                 // try executing exe and let mono handle it.
@@ -65,7 +65,7 @@ namespace OmniSharp.Cake.Services
             _process = Process.Start(startInfo);
             _process.ErrorDataReceived += (s, e) =>
             {
-                if (e.Data != null)
+                if (e.Data is not null)
                 {
                     _logger.LogError(e.Data);
                 }
@@ -73,7 +73,7 @@ namespace OmniSharp.Cake.Services
             _process.BeginErrorReadLine();
             _process.OutputDataReceived += (s, e) =>
             {
-                if (e.Data != null)
+                if (e.Data is not null)
                 {
                     _logger.LogDebug(e.Data);
                 }

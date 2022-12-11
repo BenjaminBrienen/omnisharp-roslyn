@@ -2,8 +2,9 @@ using System.Composition;
 using System.Threading.Tasks;
 using OmniSharp.Cake.Extensions;
 using OmniSharp.Mef;
-using OmniSharp.Models;
 using OmniSharp.Models.FindImplementations;
+using OmniSharp.Models.V1;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
 {
@@ -11,7 +12,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
     public class FindImplementationsHandler : CakeRequestHandler<FindImplementationsRequest, QuickFixResponse>
     {
         [ImportingConstructor]
-        public FindImplementationsHandler(OmniSharpWorkspace workspace) 
+        public FindImplementationsHandler(OmniSharpWorkspace workspace)
             : base(workspace)
         {
         }

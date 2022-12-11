@@ -12,9 +12,9 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
-using OmniSharp.Models;
 using OmniSharp.Models.FindUsages;
 using OmniSharp.Models.MembersTree;
+using OmniSharp.Models.V1;
 
 namespace OmniSharp.LanguageServerProtocol.Handlers
 {
@@ -116,7 +116,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
 
             codeLensContainer.Add(codeLens);
 
-            if (node.ChildNodes != null)
+            if (node.ChildNodes is not null)
             {
                 foreach (var childNode in node.ChildNodes)
                 {

@@ -48,14 +48,14 @@ namespace OmniSharp.Extensions
 
         public static string GetMetadataName(this ISymbol symbol)
         {
-            if (symbol == null)
+            if (symbol is null)
             {
                 throw new ArgumentNullException(nameof(symbol));
             }
 
             var symbols = new Stack<ISymbol>();
 
-            while (symbol != null)
+            while (symbol is not null)
             {
                 if (symbol.Kind == SymbolKind.Assembly ||
                     symbol.Kind == SymbolKind.NetModule)
@@ -81,7 +81,7 @@ namespace OmniSharp.Extensions
                 {
                     current = symbols.Pop();
 
-                    if (previous != null)
+                    if (previous is not null)
                     {
                         if (previous.Kind == SymbolKind.NamedType &&
                             current.Kind == SymbolKind.NamedType)

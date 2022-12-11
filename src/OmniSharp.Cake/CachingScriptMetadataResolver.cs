@@ -32,7 +32,7 @@ namespace OmniSharp.Cake
             }
 
             result = DefaultRuntimeResolver.ResolveMissingAssembly(definition, referenceIdentity);
-            if (result != null)
+            if (result is not null)
             {
                 MissingReferenceCache[referenceIdentity.Name] = result;
             }

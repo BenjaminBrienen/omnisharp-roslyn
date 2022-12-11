@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OmniSharp.Extensions;
 using OmniSharp.Models.V2;
+using OmniSharp.Roslyn;
 using OmniSharp.Roslyn.Extensions;
 using OmniSharp.Utilities;
 using Range = OmniSharp.Models.V2.Range;
@@ -21,7 +22,7 @@ namespace OmniSharp.Cake.Utilities
             }
 
             var document = workspace.GetDocument(fileName);
-            if (document == null)
+            if (document is null)
             {
                 return index;
             }
@@ -66,7 +67,7 @@ namespace OmniSharp.Cake.Utilities
             }
 
             var document = workspace.GetDocument(fileName);
-            if (document == null)
+            if (document is null)
             {
                 return (-1, fileName);
             }
@@ -78,7 +79,7 @@ namespace OmniSharp.Cake.Utilities
             }
 
             var syntaxTree = await document.GetSyntaxTreeAsync(CancellationToken.None);
-            if (syntaxTree == null)
+            if (syntaxTree is null)
             {
                 return (-1, fileName);
             }
@@ -102,12 +103,12 @@ namespace OmniSharp.Cake.Utilities
 
         private static bool PathsAreEqual(string x, string y)
         {
-            if (x == null && y == null)
+            if (x is null && y is null)
             {
                 return true;
             }
 
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
                 return false;
             }

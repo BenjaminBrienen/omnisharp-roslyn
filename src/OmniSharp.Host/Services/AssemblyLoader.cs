@@ -46,7 +46,7 @@ namespace OmniSharp.Services
                 foreach (var filePath in Directory.EnumerateFiles(folderPath, "*.dll"))
                 {
                     var assembly = LoadFrom(filePath);
-                    if (assembly != null)
+                    if (assembly is not null)
                     {
                         assemblies.Add(assembly);
                     }

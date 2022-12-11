@@ -89,7 +89,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Decompilation
                     exactMatch = assembly;
                     Log("Found exact match: {0}", assembly);
                 }
-                else if (highestVersion == null || highestVersion.Identity.Version < version)
+                else if (highestVersion is null || highestVersion.Identity.Version < version)
                 {
                     highestVersion = assembly;
                     Log("Found higher version match: {0}", assembly);

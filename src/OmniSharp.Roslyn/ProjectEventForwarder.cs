@@ -53,7 +53,7 @@ namespace OmniSharp.Roslyn
                     break;
             }
 
-            if (e != null)
+            if (e is not null)
             {
                 lock (_lock)
                 {
@@ -87,7 +87,7 @@ namespace OmniSharp.Roslyn
             foreach (var projectSystem in _projectSystems.Where(project => project.Initialized))
             {
                 var project = await projectSystem.GetProjectModelAsync(fileName);
-                if (project != null)
+                if (project is not null)
                 {
                     response.Add($"{projectSystem.Key}Project", project);
                 }
@@ -110,7 +110,7 @@ namespace OmniSharp.Roslyn
             public override bool Equals(object obj)
             {
                 var other = obj as SimpleWorkspaceEvent;
-                return other != null
+                return other is not null
                     && EventType == other.EventType
                     && FileName == other.FileName;
             }

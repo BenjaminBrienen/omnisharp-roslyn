@@ -1,6 +1,7 @@
 ﻿using System.Composition;
 using OmniSharp.Mef;
 using OmniSharp.Models.FileOpen;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Files;
 

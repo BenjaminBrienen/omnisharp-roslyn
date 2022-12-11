@@ -34,7 +34,7 @@ namespace OmniSharp.Script
         /// </summary>
         public bool IsNugetEnabled() =>
             EnableScriptNuGetReferences ||
-            (DefaultTargetFramework != null && DefaultTargetFramework.StartsWith("netcoreapp", System.StringComparison.OrdinalIgnoreCase));
+            (DefaultTargetFramework is not null && DefaultTargetFramework.StartsWith("netcoreapp", System.StringComparison.OrdinalIgnoreCase));
 
         public string RspFilePath { get; set; }
 

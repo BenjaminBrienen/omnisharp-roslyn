@@ -27,7 +27,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         {
             foreach (var (selector, handler) in handlers
                 .OfType<Mef.IRequestHandler<RenameRequest, RenameResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpRenameHandler(handler, selector);
         }
 
@@ -46,7 +46,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
 
             var omnisharpResponse = await _renameHandler.Handle(omnisharpRequest);
 
-            if (omnisharpResponse.ErrorMessage != null)
+            if (omnisharpResponse.ErrorMessage is not null)
             {
                 return new WorkspaceEdit();
             }

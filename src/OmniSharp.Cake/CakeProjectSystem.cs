@@ -20,336 +20,337 @@ using OmniSharp.FileSystem;
 using OmniSharp.FileWatching;
 using OmniSharp.Helpers;
 using OmniSharp.Mef;
-using OmniSharp.Models.WorkspaceInformation;
+using OmniSharp.Models.V1.WorkspaceInformation;
+using OmniSharp.Roslyn;
 using OmniSharp.Roslyn.EditorConfig;
 using OmniSharp.Roslyn.Utilities;
 using OmniSharp.Services;
 
-namespace OmniSharp.Cake
+namespace OmniSharp.Cake;
+
+[ExportProjectSystem(ProjectSystemNames.CakeProjectSystem), Shared]
+public class CakeProjectSystem : IProjectSystem
 {
-    [ExportProjectSystem(ProjectSystemNames.CakeProjectSystem), Shared]
-    public class CakeProjectSystem : IProjectSystem
+    private readonly OmniSharpWorkspace _workspace;
+    private readonly MetadataFileReferenceCache _metadataReferenceCache;
+    private readonly IOmniSharpEnvironment _environment;
+    private readonly IAssemblyLoader _assemblyLoader;
+    private readonly ICakeScriptService _scriptService;
+    private readonly IFileSystemWatcher _fileSystemWatcher;
+    private readonly FileSystemHelper _fileSystemHelper;
+    private readonly ILogger<CakeProjectSystem> _logger;
+    private readonly ConcurrentDictionary<string, ProjectInfo> _projects;
+    private readonly Lazy<CSharpCompilationOptions> _compilationOptions;
+    private CakeOptions? _options;
+    public string Key { get; } = "Cake";
+    public string Language { get; } = Constants.LanguageNames.Cake;
+    public IEnumerable<string> Extensions { get; } = new[] { ".cake" };
+    public bool EnabledByDefault { get; } = true;
+    public bool Initialized { get; private set; }
+
+    [ImportingConstructor]
+    public CakeProjectSystem(
+        OmniSharpWorkspace workspace,
+        MetadataFileReferenceCache metadataReferenceCache,
+        IOmniSharpEnvironment environment,
+        IAssemblyLoader assemblyLoader,
+        ICakeScriptService scriptService,
+        IFileSystemWatcher fileSystemWatcher,
+        FileSystemHelper fileSystemHelper,
+        ILoggerFactory loggerFactory)
     {
-        private readonly OmniSharpWorkspace _workspace;
-        private readonly MetadataFileReferenceCache _metadataReferenceCache;
-        private readonly IOmniSharpEnvironment _environment;
-        private readonly IAssemblyLoader _assemblyLoader;
-        private readonly ICakeScriptService _scriptService;
-        private readonly IFileSystemWatcher _fileSystemWatcher;
-        private readonly FileSystemHelper _fileSystemHelper;
-        private readonly ILogger<CakeProjectSystem> _logger;
-        private readonly ConcurrentDictionary<string, ProjectInfo> _projects;
-        private readonly Lazy<CSharpCompilationOptions> _compilationOptions;
-        private CakeOptions _options;
-        public string Key { get; } = "Cake";
-        public string Language { get; } = Constants.LanguageNames.Cake;
-        public IEnumerable<string> Extensions { get; } = new[] { ".cake" };
-        public bool EnabledByDefault { get; } = true;
-        public bool Initialized { get; private set; }
+        _workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
+        _metadataReferenceCache = metadataReferenceCache ?? throw new ArgumentNullException(nameof(metadataReferenceCache));
+        _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+        _assemblyLoader = assemblyLoader ?? throw new ArgumentNullException(nameof(assemblyLoader));
+        _scriptService = scriptService ?? throw new ArgumentNullException(nameof(scriptService));
+        _fileSystemWatcher = fileSystemWatcher ?? throw new ArgumentNullException(nameof(fileSystemWatcher));
+        _fileSystemHelper = fileSystemHelper;
+        _logger = loggerFactory?.CreateLogger<CakeProjectSystem>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 
-        [ImportingConstructor]
-        public CakeProjectSystem(
-            OmniSharpWorkspace workspace,
-            MetadataFileReferenceCache metadataReferenceCache,
-            IOmniSharpEnvironment environment,
-            IAssemblyLoader assemblyLoader,
-            ICakeScriptService scriptService,
-            IFileSystemWatcher fileSystemWatcher,
-            FileSystemHelper fileSystemHelper,
-            ILoggerFactory loggerFactory)
-        {
-            _workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
-            _metadataReferenceCache = metadataReferenceCache ?? throw new ArgumentNullException(nameof(metadataReferenceCache));
-            _environment = environment ?? throw new ArgumentNullException(nameof(environment));
-            _assemblyLoader = assemblyLoader ?? throw new ArgumentNullException(nameof(assemblyLoader));
-            _scriptService = scriptService ?? throw new ArgumentNullException(nameof(scriptService));
-            _fileSystemWatcher = fileSystemWatcher ?? throw new ArgumentNullException(nameof(fileSystemWatcher));
-            _fileSystemHelper = fileSystemHelper;
-            _logger = loggerFactory?.CreateLogger<CakeProjectSystem>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+        _projects = new ConcurrentDictionary<string, ProjectInfo>();
+        _compilationOptions = new Lazy<CSharpCompilationOptions>(CreateCompilationOptions);
+    }
 
-            _projects = new ConcurrentDictionary<string, ProjectInfo>();
-            _compilationOptions = new Lazy<CSharpCompilationOptions>(CreateCompilationOptions);
-        }
+    public void Initalize(IConfiguration configuration)
+    {
+        if (Initialized)
+            return;
 
-        public void Initalize(IConfiguration configuration)
-        {
-            if (Initialized) return;
-
-            _options = new CakeOptions();
-            configuration.Bind(_options);
+        _options = new CakeOptions();
+        configuration.Bind(_options);
 
             _logger.LogInformation($"Detecting Cake files in '{_environment.TargetDirectory}'.");
 
-            // Nothing to do if there are no Cake files
-            var allCakeFiles = _fileSystemHelper.GetFiles("**/*.cake").ToArray();
-            if (allCakeFiles.Length == 0)
-            {
+        // Nothing to do if there are no Cake files
+        string[] allCakeFiles = _fileSystemHelper.GetFiles("**/*.cake").ToArray();
+        if (allCakeFiles.Length == 0)
+        {
                 _logger.LogInformation("Did not find any Cake files");
-                return;
-            }
+            return;
+        }
 
             _logger.LogInformation($"Found {allCakeFiles.Length} Cake files.");
 
-            // Try intialize Cake scripting service
-            if (!_scriptService.Initialize(_options))
-            {
+        // Try intialize Cake scripting service
+        if (!_scriptService.Initialize(_options))
+        {
                 _logger.LogWarning("Could not initialize Cake script service. Aborting.");
-                return;
-            }
-
-            foreach (var cakeFilePath in allCakeFiles)
-            {
-                AddCakeFile(cakeFilePath);
-            }
-
-            // Hook up Cake script events
-            _scriptService.ReferencesChanged += ScriptReferencesChanged;
-            _scriptService.UsingsChanged += ScriptUsingsChanged;
-
-            // Watch .cake files
-            _fileSystemWatcher.Watch(".cake", OnCakeFileChanged);
-
-            Initialized = true;
+            return;
         }
 
-        private void AddCakeFile(string cakeFilePath)
+        foreach (string? cakeFilePath in allCakeFiles)
         {
-            try
+            AddCakeFile(cakeFilePath);
+        }
+
+        // Hook up Cake script events
+        _scriptService.ReferencesChanged += ScriptReferencesChanged;
+        _scriptService.UsingsChanged += ScriptUsingsChanged;
+
+        // Watch .cake files
+        _fileSystemWatcher.Watch(".cake", OnCakeFileChanged);
+
+        Initialized = true;
+    }
+
+    private void AddCakeFile(string cakeFilePath)
+    {
+        try
+        {
+            CakeScript cakeScript = _scriptService.Generate(new FileChange
             {
-                var cakeScript = _scriptService.Generate(new FileChange
-                {
-                    FileName = cakeFilePath,
-                    FromDisk = true
-                });
+                FileName = cakeFilePath,
+                FromDisk = true
+            });
 
-                var project = GetProject(cakeScript, cakeFilePath);
+            ProjectInfo project = GetProject(cakeScript, cakeFilePath);
 
-                // add Cake project to workspace
-                _workspace.AddProject(project);
-                var documentId = DocumentId.CreateNewId(project.Id);
-                var loader = TextLoader.From(TextAndVersion.Create(SourceText.From(cakeScript.Source), VersionStamp.Create(DateTime.UtcNow)));
-                var documentInfo = DocumentInfo.Create(
-                    documentId,
-                    cakeFilePath,
-                    filePath: cakeFilePath,
-                    loader: loader,
-                    sourceCodeKind: SourceCodeKind.Script);
+            // Add Cake project to workspace
+            _workspace.AddProject(project);
+            var documentId = DocumentId.CreateNewId(project.Id);
+            var loader = TextLoader.From(TextAndVersion.Create(SourceText.From(cakeScript.Source), VersionStamp.Create(DateTime.UtcNow)));
+            var documentInfo = DocumentInfo.Create(
+                documentId,
+                cakeFilePath,
+                filePath: cakeFilePath,
+                loader: loader,
+                sourceCodeKind: SourceCodeKind.Script);
 
-                _workspace.AddDocument(documentInfo);
-                _projects[cakeFilePath] = project;
+            _workspace.AddDocument(documentInfo);
+            _projects[cakeFilePath] = project;
                 _logger.LogInformation($"Added Cake project '{cakeFilePath}' to the workspace.");
-            }
-            catch (Exception ex)
-            {
+        }
+#pragma warning disable CA1031
+        catch (Exception ex)
+        {
                 _logger.LogError(ex, $"{cakeFilePath} will be ignored due to an following error");
-            }
         }
+#pragma warning restore CA1031
+    }
 
-        private void RemoveCakeFile(string cakeFilePath)
+    private void RemoveCakeFile(string cakeFilePath)
+    {
+        if (_projects.TryRemove(cakeFilePath, out ProjectInfo? projectInfo))
         {
-            if (_projects.TryRemove(cakeFilePath, out var projectInfo))
-            {
-                _workspace.RemoveProject(projectInfo.Id);
+            _workspace.RemoveProject(projectInfo.Id);
                 _logger.LogInformation($"Removed Cake project '{cakeFilePath}' from the workspace.");
-            }
+        }
+    }
+
+    private void OnCakeFileChanged(string filePath, FileChangeType changeType)
+    {
+        if ((changeType == FileChangeType.Unspecified && !File.Exists(filePath)) || changeType == FileChangeType.Delete)
+        {
+            RemoveCakeFile(filePath);
         }
 
-        private void OnCakeFileChanged(string filePath, FileChangeType changeType)
+        if ((changeType == FileChangeType.Unspecified && File.Exists(filePath)) || changeType == FileChangeType.Create)
         {
-            if (changeType == FileChangeType.Unspecified && !File.Exists(filePath) || changeType == FileChangeType.Delete)
-            {
-                RemoveCakeFile(filePath);
-            }
+            AddCakeFile(filePath);
+        }
+    }
 
-            if (changeType == FileChangeType.Unspecified && File.Exists(filePath) || changeType == FileChangeType.Create)
-            {
-                AddCakeFile(filePath);
-            }
+    private void ScriptUsingsChanged(object? sender, UsingsChangedEventArgs e)
+    {
+        Solution solution = _workspace.CurrentSolution;
+
+        ImmutableArray<DocumentId> documentIds = solution.GetDocumentIdsWithFilePath(e.ScriptPath);
+        if (documentIds.IsEmpty)
+        {
+            return;
         }
 
-        private void ScriptUsingsChanged(object sender, UsingsChangedEventArgs e)
+        CSharpCompilationOptions compilationOptions = e.Usings is null
+            ? _compilationOptions.Value
+            : _compilationOptions.Value.WithUsings(e.Usings);
+
+        foreach (DocumentId documentId in documentIds)
         {
-            var solution = _workspace.CurrentSolution;
+            Document document = solution.GetDocument(documentId) ?? throw new InvalidOperationException($"Missing document {documentId.Id} in {documentId.ProjectId}");
+            Project project = document.Project;
 
-            var documentIds = solution.GetDocumentIdsWithFilePath(e.ScriptPath);
-            if (documentIds.IsEmpty)
-            {
-                return;
-            }
+            _workspace.SetCompilationOptions(project.Id, compilationOptions);
+        }
+    }
 
-            var compilationOptions = e.Usings == null
-                ? _compilationOptions.Value
-                : _compilationOptions.Value.WithUsings(e.Usings);
+    private void ScriptReferencesChanged(object? sender, ReferencesChangedEventArgs e)
+    {
+        Solution solution = _workspace.CurrentSolution;
 
-            foreach (var documentId in documentIds)
-            {
-                var document = solution.GetDocument(documentId);
-                var project = document.Project;
-
-                _workspace.SetCompilationOptions(project.Id, compilationOptions);
-            }
+        ImmutableArray<DocumentId> documentIds = solution.GetDocumentIdsWithFilePath(e.ScriptPath);
+        if (documentIds.IsEmpty)
+        {
+            return;
         }
 
-        private void ScriptReferencesChanged(object sender, ReferencesChangedEventArgs e)
+        foreach (DocumentId documentId in documentIds)
         {
-            var solution = _workspace.CurrentSolution;
+            Document document = solution.GetDocument(documentId) ?? throw new InvalidOperationException($"Missing document {documentId.Id} in {documentId.ProjectId}");
+            Project project = document.Project;
 
-            var documentIds = solution.GetDocumentIdsWithFilePath(e.ScriptPath);
-            if (documentIds.IsEmpty)
+            IEnumerable<MetadataReference> metadataReferences = GetMetadataReferences(e.References);
+            var referencesToRemove = new HashSet<MetadataReference>(project.MetadataReferences, MetadataReferenceEqualityComparer.Instance);
+            var referencesToAdd = new HashSet<MetadataReference>(MetadataReferenceEqualityComparer.Instance);
+
+            foreach (MetadataReference reference in metadataReferences)
             {
-                return;
-            }
-
-            foreach (var documentId in documentIds)
-            {
-                var document = solution.GetDocument(documentId);
-                var project = document.Project;
-
-                var metadataReferences = GetMetadataReferences(e.References);
-                var referencesToRemove = new HashSet<MetadataReference>(project.MetadataReferences, MetadataReferenceEqualityComparer.Instance);
-                var referencesToAdd = new HashSet<MetadataReference>(MetadataReferenceEqualityComparer.Instance);
-
-                foreach (var reference in metadataReferences)
+                if (referencesToRemove.Remove(reference))
                 {
-                    if (referencesToRemove.Remove(reference))
-                    {
-                        continue;
-                    }
-
-                    if (referencesToAdd.Contains(reference))
-                    {
-                        continue;
-                    }
-
-                    _workspace.AddMetadataReference(project.Id, reference);
-                    referencesToAdd.Add(reference);
+                    continue;
                 }
 
-                foreach (var reference in referencesToRemove)
+                if (referencesToAdd.Contains(reference))
                 {
-                    _workspace.RemoveMetadataReference(project.Id, reference);
+                    continue;
                 }
+
+                _workspace.AddMetadataReference(project.Id, reference);
+                referencesToAdd.Add(reference);
+            }
+
+            foreach (MetadataReference reference in referencesToRemove)
+            {
+                _workspace.RemoveMetadataReference(project.Id, reference);
             }
         }
+    }
 
-        public Task WaitForIdleAsync() => Task.CompletedTask;
+    public Task WaitForIdleAsync() => Task.CompletedTask;
 
-        public Task<object> GetWorkspaceModelAsync(WorkspaceInformationRequest request)
+    public Task<object> GetWorkspaceModelAsync(WorkspaceInformationRequest request)
+    {
+        var scriptContextModels = new List<CakeContextModel>();
+        foreach (KeyValuePair<string, ProjectInfo> project in _projects)
         {
-            var scriptContextModels = new List<CakeContextModel>();
-            foreach (var project in _projects)
-            {
-                scriptContextModels.Add(new CakeContextModel(project.Key));
-            }
-            return Task.FromResult<object>(new CakeContextModelCollection(scriptContextModels));
+            scriptContextModels.Add(new CakeContextModel(project.Key));
         }
+        return Task.FromResult<object>(new CakeContextModelCollection(scriptContextModels));
+    }
 
-        public Task<object> GetProjectModelAsync(string filePath)
+    public Task<object?> GetProjectModelAsync(string filePath)
+    {
+        if (filePath is null)
+            throw new ArgumentNullException(nameof(filePath));
+
+        // Only react to .cake file paths
+        if (filePath.EndsWith(".cake", StringComparison.OrdinalIgnoreCase))
         {
-            // only react to .cake file paths
-            if (!filePath.EndsWith(".cake", StringComparison.OrdinalIgnoreCase))
+            Document document = _workspace.GetDocument(filePath);
+            string? projectFilePath = document is not null ? document.Project.FilePath : filePath;
+            ProjectInfo? projectInfo = GetProjectFileInfo(projectFilePath);
+            if (projectInfo is not null)
             {
-                return Task.FromResult<object>(null);
+                return Task.FromResult<object?>(new CakeContextModel(filePath));
             }
-
-            var document = _workspace.GetDocument(filePath);
-            var projectFilePath = document != null
-                ? document.Project.FilePath
-                : filePath;
-
-            var projectInfo = GetProjectFileInfo(projectFilePath);
-            if (projectInfo == null)
+            else
             {
                 _logger.LogDebug($"Could not locate project for '{projectFilePath}'");
                 return Task.FromResult<object>(null);
             }
+        }
+        return Task.FromResult<object?>(null);
+    }
 
-            return Task.FromResult<object>(new CakeContextModel(filePath));
+    private ProjectInfo? GetProjectFileInfo(string? path) => path is not null && _projects.TryGetValue(path, out ProjectInfo? projectFileInfo) ? projectFileInfo : null;
+
+    private ProjectInfo GetProject(CakeScript cakeScript, string filePath)
+    {
+        string name = Path.GetFileName(filePath);
+
+        if (!File.Exists(cakeScript.Host.AssemblyPath))
+        {
+            throw new FileNotFoundException($"Cake is not installed. Path {cakeScript.Host.AssemblyPath} does not exist.");
+        }
+        var hostObjectType = Type.GetType(cakeScript.Host.TypeName, a => _assemblyLoader.LoadFrom(cakeScript.Host.AssemblyPath, dontLockAssemblyOnDisk: true), null, false);
+        if (hostObjectType is null)
+        {
+            throw new InvalidOperationException($"Could not get host object type: {cakeScript.Host.TypeName}.");
         }
 
-        private ProjectInfo GetProjectFileInfo(string path)
+        var projectId = ProjectId.CreateNewId(Guid.NewGuid().ToString());
+        ImmutableArray<DocumentInfo> analyzerConfigDocuments = _workspace.EditorConfigEnabled
+            ? EditorConfigFinder
+                .GetEditorConfigPaths(filePath)
+                .Select(path =>
+                    DocumentInfo.Create(
+                        DocumentId.CreateNewId(projectId),
+                        name: ".editorconfig",
+                        loader: new FileTextLoader(path, Encoding.UTF8),
+                        filePath: path))
+                .ToImmutableArray()
+            : ImmutableArray<DocumentInfo>.Empty;
+
+        return ProjectInfo.Create(
+            id: projectId,
+            version: VersionStamp.Create(),
+            name: name,
+            filePath: filePath,
+            assemblyName: $"{name}.dll",
+            language: LanguageNames.CSharp,
+            compilationOptions: cakeScript.Usings is null ? _compilationOptions.Value : _compilationOptions.Value.WithUsings(cakeScript.Usings),
+            parseOptions: new CSharpParseOptions(LanguageVersion.Latest, DocumentationMode.Parse, SourceCodeKind.Script),
+            metadataReferences: GetMetadataReferences(cakeScript.References),
+            // TODO: projectReferences?
+            isSubmission: true,
+            hostObjectType: hostObjectType)
+            .WithAnalyzerConfigDocuments(analyzerConfigDocuments);
+    }
+
+    private IEnumerable<MetadataReference> GetMetadataReferences(IEnumerable<string> references)
+    {
+        foreach (string reference in references)
         {
-            return !_projects.TryGetValue(path, out ProjectInfo projectFileInfo) ? null : projectFileInfo;
-        }
-
-        private ProjectInfo GetProject(CakeScript cakeScript, string filePath)
-        {
-            var name = Path.GetFileName(filePath);
-
-            if (!File.Exists(cakeScript.Host.AssemblyPath))
+            if (!File.Exists(reference))
             {
-                throw new FileNotFoundException($"Cake is not installed. Path {cakeScript.Host.AssemblyPath} does not exist.");
-            }
-            var hostObjectType = Type.GetType(cakeScript.Host.TypeName, a => _assemblyLoader.LoadFrom(cakeScript.Host.AssemblyPath, dontLockAssemblyOnDisk: true), null, false);
-            if (hostObjectType == null)
-            {
-                throw new InvalidOperationException($"Could not get host object type: {cakeScript.Host.TypeName}.");
-            }
-
-            var projectId = ProjectId.CreateNewId(Guid.NewGuid().ToString());
-            var analyzerConfigDocuments = _workspace.EditorConfigEnabled
-                ? EditorConfigFinder
-                    .GetEditorConfigPaths(filePath)
-                    .Select(path =>
-                        DocumentInfo.Create(
-                            DocumentId.CreateNewId(projectId),
-                            name: ".editorconfig",
-                            loader: new FileTextLoader(path, Encoding.UTF8),
-                            filePath: path))
-                    .ToImmutableArray()
-                : ImmutableArray<DocumentInfo>.Empty;
-
-            return ProjectInfo.Create(
-                id: projectId,
-                version: VersionStamp.Create(),
-                name: name,
-                filePath: filePath,
-                assemblyName: $"{name}.dll",
-                language: LanguageNames.CSharp,
-                compilationOptions: cakeScript.Usings == null ? _compilationOptions.Value : _compilationOptions.Value.WithUsings(cakeScript.Usings),
-                parseOptions: new CSharpParseOptions(LanguageVersion.Latest, DocumentationMode.Parse, SourceCodeKind.Script),
-                metadataReferences: GetMetadataReferences(cakeScript.References),
-                // TODO: projectReferences?
-                isSubmission: true,
-                hostObjectType: hostObjectType)
-                .WithAnalyzerConfigDocuments(analyzerConfigDocuments);
-        }
-
-        private IEnumerable<MetadataReference> GetMetadataReferences(IEnumerable<string> references)
-        {
-            foreach (var reference in references)
-            {
-                if (!File.Exists(reference))
-                {
                     _logger.LogWarning($"Unable to create MetadataReference. File {reference} does not exist.");
-                    continue;
-                }
-
-                yield return _metadataReferenceCache.GetMetadataReference(reference);
+                continue;
             }
-        }
 
-        private static CSharpCompilationOptions CreateCompilationOptions()
+            yield return _metadataReferenceCache.GetMetadataReference(reference);
+        }
+    }
+
+    private static CSharpCompilationOptions CreateCompilationOptions()
+    {
+        CSharpCompilationOptions compilationOptions = new CSharpCompilationOptions(
+                OutputKind.DynamicallyLinkedLibrary,
+                allowUnsafe: true,
+                metadataReferenceResolver: new CachingScriptMetadataResolver(),
+                sourceReferenceResolver: ScriptSourceResolver.Default,
+                assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default).
+                WithSpecificDiagnosticOptions(CompilationOptionsHelper.GetDefaultSuppressedDiagnosticOptions());
+
+        PropertyInfo? topLevelBinderFlagsProperty = typeof(CSharpCompilationOptions).GetProperty("TopLevelBinderFlags", BindingFlags.Instance | BindingFlags.NonPublic);
+        Type? binderFlagsType = typeof(CSharpCompilationOptions).GetTypeInfo().Assembly.GetType("Microsoft.CodeAnalysis.CSharp.BinderFlags");
+
+        FieldInfo? ignoreCorLibraryDuplicatedTypesMember = binderFlagsType?.GetField("IgnoreCorLibraryDuplicatedTypes", BindingFlags.Static | BindingFlags.Public);
+        object? ignoreCorLibraryDuplicatedTypesValue = ignoreCorLibraryDuplicatedTypesMember?.GetValue(null);
+        if (ignoreCorLibraryDuplicatedTypesValue is not null)
         {
-            var compilationOptions = new CSharpCompilationOptions(
-                    OutputKind.DynamicallyLinkedLibrary,
-                    allowUnsafe: true,
-                    metadataReferenceResolver: new CachingScriptMetadataResolver(),
-                    sourceReferenceResolver: ScriptSourceResolver.Default,
-                    assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default).
-                    WithSpecificDiagnosticOptions(CompilationOptionsHelper.GetDefaultSuppressedDiagnosticOptions());
-
-            var topLevelBinderFlagsProperty = typeof(CSharpCompilationOptions).GetProperty("TopLevelBinderFlags", BindingFlags.Instance | BindingFlags.NonPublic);
-            var binderFlagsType = typeof(CSharpCompilationOptions).GetTypeInfo().Assembly.GetType("Microsoft.CodeAnalysis.CSharp.BinderFlags");
-
-            var ignoreCorLibraryDuplicatedTypesMember = binderFlagsType?.GetField("IgnoreCorLibraryDuplicatedTypes", BindingFlags.Static | BindingFlags.Public);
-            var ignoreCorLibraryDuplicatedTypesValue = ignoreCorLibraryDuplicatedTypesMember?.GetValue(null);
-            if (ignoreCorLibraryDuplicatedTypesValue != null)
-            {
-                topLevelBinderFlagsProperty?.SetValue(compilationOptions, ignoreCorLibraryDuplicatedTypesValue);
-            }
-
-            return compilationOptions;
+            topLevelBinderFlagsProperty?.SetValue(compilationOptions, ignoreCorLibraryDuplicatedTypesValue);
         }
+
+        return compilationOptions;
     }
 }

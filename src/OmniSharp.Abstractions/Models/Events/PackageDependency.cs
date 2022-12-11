@@ -1,9 +1,7 @@
-namespace OmniSharp.Models.Events
-{
-    public class PackageDependency
-    {
-        public string Name { get; set; }
+namespace OmniSharp.Models.Events;
 
-        public string Version { get; set; }
-    }
-}
+public record PackageDependency
+(
+    string Name,
+    string Version
+);

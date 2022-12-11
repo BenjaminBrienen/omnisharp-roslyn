@@ -69,7 +69,7 @@ namespace OmniSharp.Utilities
                 os = OperatingSystem.Windows;
 
                 if (Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") == "x86" &&
-                    Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432") == null)
+                    Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432") is null)
                 {
                     architecture = Architecture.x86;
                 }
@@ -168,14 +168,14 @@ namespace OmniSharp.Utilities
                         version = ParseVersion(value);
                     }
 
-                    if (distroName != null && version != null)
+                    if (distroName is not null && version is not null)
                     {
                         break;
                     }
                 }
             }
 
-            if (distroName == null)
+            if (distroName is null)
             {
                 distroName = "Unknown";
             }

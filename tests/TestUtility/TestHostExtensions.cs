@@ -1,8 +1,8 @@
 ﻿using OmniSharp;
 using OmniSharp.FileWatching;
-using OmniSharp.Models;
 using OmniSharp.Models.CodeCheck;
 using OmniSharp.Models.FilesChanged;
+using OmniSharp.Models.v1;
 using OmniSharp.Models.WorkspaceInformation;
 using OmniSharp.MSBuild.Models;
 using OmniSharp.Roslyn.CSharp.Services.Diagnostics;

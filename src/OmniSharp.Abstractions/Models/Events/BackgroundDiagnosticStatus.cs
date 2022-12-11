@@ -1,9 +1,8 @@
-namespace OmniSharp.Models.Events
+namespace OmniSharp.Models.Events;
+
+public enum BackgroundDiagnosticStatus
 {
-    public enum BackgroundDiagnosticStatus
-    {
-        Started = 0,
-        Progress = 1,
-        Finished = 2
-    }
+    Started = 0,
+    Progress = 1,
+    Finished = 2
 }

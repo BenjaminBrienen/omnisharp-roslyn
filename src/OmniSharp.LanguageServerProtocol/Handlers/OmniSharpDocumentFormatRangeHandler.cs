@@ -19,7 +19,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         {
             foreach (var (selector, handler) in handlers
                 .OfType<Mef.IRequestHandler<FormatRangeRequest, FormatRangeResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpDocumentFormatRangeHandler(handler, selector);
         }
 

@@ -1,6 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
-using OmniSharp.Models.v1.Completion;
+using OmniSharp.Models.V1.Completion;
 using OmniSharp.Roslyn.CSharp.Services.Completion;
 using System.Collections.Generic;
 using System.Linq;

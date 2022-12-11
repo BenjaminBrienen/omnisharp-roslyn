@@ -1,18 +1,17 @@
 using System.Composition;
 
-namespace OmniSharp.Mef
+namespace OmniSharp.Mef;
+
+[MetadataAttribute]
+public sealed class OmniSharpHandlerAttribute : ExportAttribute
 {
-    [MetadataAttribute]
-    public class OmniSharpHandlerAttribute : ExportAttribute
+    public string Language { get; }
+
+    public string EndpointName { get; }
+
+    public OmniSharpHandlerAttribute(string endpointName, string language) : base(typeof(IRequestHandler))
     {
-        public string Language { get; }
-
-        public string EndpointName { get; }
-
-        public OmniSharpHandlerAttribute(string endpoint, string language) : base(typeof(IRequestHandler))
-        {
-            EndpointName = endpoint;
-            Language = language;
-        }
+        EndpointName = endpointName;
+        Language = language;
     }
 }

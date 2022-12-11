@@ -7,8 +7,8 @@ using OmniSharp.Extensions.JsonRpc;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Models;
 using OmniSharp.Models.FindImplementations;
+using OmniSharp.Models.V1;
 using static OmniSharp.LanguageServerProtocol.Helpers;
 
 namespace OmniSharp.LanguageServerProtocol.Handlers
@@ -19,7 +19,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         {
             foreach (var (selector, handler) in handlers
                 .OfType<Mef.IRequestHandler<FindImplementationsRequest, QuickFixResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpImplementationHandler(handler, selector);
         }
 

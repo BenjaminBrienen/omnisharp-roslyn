@@ -25,7 +25,7 @@ namespace OmniSharp.Services
 
         public static DotNetVersion Parse(List<string> lines)
         {
-            if (lines == null || lines.Count == 0)
+            if (lines is null || lines.Count == 0)
             {
                 return new DotNetVersion("`dotnet --version` produced no output.");
             }

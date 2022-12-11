@@ -122,7 +122,7 @@ namespace OmniSharp.MSBuild
         private MSB.Evaluation.Project EvaluateProjectFileCore(string filePath, IReadOnlyDictionary<string, string> projectConfigurationsInSolution = null, IList<MSB.Framework.ILogger> loggers = null)
         {
             var localProperties = new Dictionary<string, string>(_globalProperties);
-            if (projectConfigurationsInSolution != null
+            if (projectConfigurationsInSolution is not null
                 && localProperties.TryGetValue(PropertyNames.Configuration, out string solutionConfiguration))
             {
                 if (!localProperties.TryGetValue(PropertyNames.Platform, out string solutionPlatform))
@@ -209,7 +209,7 @@ namespace OmniSharp.MSBuild
                 {
                     legalToolsets.Add(toolsetVersion, toolset);
 
-                    if (highestVersion == null ||
+                    if (highestVersion is null ||
                         toolsetVersion > highestVersion)
                     {
                         highestVersion = toolsetVersion;
@@ -217,7 +217,7 @@ namespace OmniSharp.MSBuild
                 }
             }
 
-            if (legalToolsets.Count == 0 || highestVersion == null)
+            if (legalToolsets.Count == 0 || highestVersion is null)
             {
                 _logger.LogError($"No legal MSBuild tools available, defaulting to {toolsVersion}.");
                 return toolsVersion;

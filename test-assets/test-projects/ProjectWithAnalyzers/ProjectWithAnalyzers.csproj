@@ -6,6 +6,7 @@
     <LangVersion>7.1</LangVersion>
     <CodeAnalysisRuleSet>default.ruleset</CodeAnalysisRuleSet>
     <RestorePackagesPath>./nugets/</RestorePackagesPath>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />

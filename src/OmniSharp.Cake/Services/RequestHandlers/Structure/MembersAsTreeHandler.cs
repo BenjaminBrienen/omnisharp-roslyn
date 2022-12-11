@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using OmniSharp.Cake.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models.MembersTree;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Structure
 {
@@ -11,7 +12,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Structure
     {
         [ImportingConstructor]
         public MembersAsTreeHandler(
-            OmniSharpWorkspace workspace) 
+            OmniSharpWorkspace workspace)
             : base(workspace)
         {
         }

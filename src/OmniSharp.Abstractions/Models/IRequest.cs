@@ -1,6 +1,3 @@
-﻿namespace OmniSharp
-{
-    public interface IRequest
-    {
-    }
-}
+﻿namespace OmniSharp.Models;
+#pragma warning disable CA1040
+public interface IRequest { }

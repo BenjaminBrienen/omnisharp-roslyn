@@ -1,7 +1,11 @@
-﻿namespace OmniSharp.Models
+﻿namespace OmniSharp.Models;
+
+public interface IAggregateResponse<T> where T : IAggregateResponse<T>
 {
-    public interface IAggregateResponse
-    {
-        IAggregateResponse Merge(IAggregateResponse response);
-    }
+    T Merge(T response);
+}
+
+public interface IAggregateResponse
+{
+    IAggregateResponse Merge(IAggregateResponse response);
 }

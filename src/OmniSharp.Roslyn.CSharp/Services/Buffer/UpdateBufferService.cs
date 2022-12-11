@@ -2,7 +2,7 @@ using System.Composition;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using OmniSharp.Mef;
-using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Models.V1.UpdateBuffer;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Buffer
 {

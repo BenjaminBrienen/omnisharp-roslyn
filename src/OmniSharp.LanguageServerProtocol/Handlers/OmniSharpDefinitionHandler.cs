@@ -17,7 +17,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         public static IEnumerable<IJsonRpcHandler> Enumerate(RequestHandlers handlers)
         {
             foreach (var (selector, handler) in handlers.OfType<Mef.IRequestHandler<GotoDefinitionRequest, GotoDefinitionResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpDefinitionHandler(handler, selector);
         }
 
@@ -41,7 +41,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
 
             var omnisharpResponse = await _definitionHandler.Handle(omnisharpRequest);
 
-            if (omnisharpResponse.Definitions == null)
+            if (omnisharpResponse.Definitions is null)
             {
                 return new LocationOrLocationLinks();
             }

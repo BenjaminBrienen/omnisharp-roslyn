@@ -31,7 +31,7 @@ namespace OmniSharp.MSBuild.Discovery.Providers
             // that case we can use the Microsoft.Build.* assemblies located under the installed Mono path.
 
             var monoRuntimePath = PlatformHelper.GetMonoRuntimePath();
-            if (monoRuntimePath == null)
+            if (monoRuntimePath is null)
             {
                 Logger.LogDebug("Could not retrieve Mono runtime path");
                 return NoInstances;
@@ -55,7 +55,7 @@ namespace OmniSharp.MSBuild.Discovery.Providers
             }
 
             var path = PlatformHelper.GetMonoMSBuildDirPath();
-            if (path == null)
+            if (path is null)
             {
                 return NoInstances;
             }
@@ -63,7 +63,7 @@ namespace OmniSharp.MSBuild.Discovery.Providers
             // Double-check Mono version.
             // .NET Core 3.0 is not supported in MSBuild before 6.4.0
             var monoVersion = PlatformHelper.GetMonoVersion();
-            if (monoVersion == null)
+            if (monoVersion is null)
             {
                 Logger.LogDebug("Could not retrieve Mono version");
                 return NoInstances;
@@ -76,7 +76,7 @@ namespace OmniSharp.MSBuild.Discovery.Providers
             }
 
             var toolsPath = FindMSBuildToolsPath(path);
-            if (toolsPath == null)
+            if (toolsPath is null)
             {
                 Logger.LogWarning($"Mono MSBuild could not be used because an MSBuild tools path could not be found.");
                 return NoInstances;

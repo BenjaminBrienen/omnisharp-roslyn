@@ -35,7 +35,7 @@ namespace OmniSharp.Script
             }
 
             var result = _defaultReferenceResolver.ResolveMissingAssembly(definition, referenceIdentity);
-            if (result != null)
+            if (result is not null)
             {
                 MissingReferenceCache[referenceIdentity.Name] = result;
             }

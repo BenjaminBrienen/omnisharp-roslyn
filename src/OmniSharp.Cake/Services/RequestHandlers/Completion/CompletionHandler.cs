@@ -3,7 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using OmniSharp.Cake.Extensions;
 using OmniSharp.Mef;
-using OmniSharp.Models.v1.Completion;
+using OmniSharp.Models.V1.Completion;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Completion
 {

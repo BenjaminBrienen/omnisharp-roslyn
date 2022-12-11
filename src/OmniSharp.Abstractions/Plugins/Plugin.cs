@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using OmniSharp.Models.WorkspaceInformation;
+using OmniSharp.Models.V1.WorkspaceInformation;
 using OmniSharp.Services;
 
 namespace OmniSharp.Plugins
@@ -63,7 +63,7 @@ namespace OmniSharp.Plugins
             while (!_cancellation.IsCancellationRequested)
             {
                 var line = await _process.StandardOutput.ReadLineAsync();
-                if (line == null)
+                if (line is null)
                 {
                     break;
                 }

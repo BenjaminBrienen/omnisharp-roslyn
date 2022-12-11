@@ -70,7 +70,7 @@ namespace OmniSharp.Script
             if (!string.IsNullOrWhiteSpace(_scriptOptions.RspFilePath))
             {
                 var rspFilePath = _scriptOptions.GetNormalizedRspFilePath(_env);
-                if (rspFilePath != null)
+                if (rspFilePath is not null)
                 {
                     if(!File.Exists(rspFilePath))
                     {
@@ -95,7 +95,7 @@ namespace OmniSharp.Script
             // if RSP file was used, pick namespaces from there
             // otherwise use default set of namespaces
             var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
-                usings: csharpCommandLineArguments != null
+                usings: csharpCommandLineArguments is not null
                     ? csharpCommandLineArguments.CompilationOptions.Usings
                     : DefaultNamespaces);
 
@@ -104,7 +104,7 @@ namespace OmniSharp.Script
                 _logger.LogDebug($"CSX global using statement: {ns}");
             }
 
-            if(csharpCommandLineArguments != null)
+            if(csharpCommandLineArguments is not null)
             {
                 foreach(var error in csharpCommandLineArguments.Errors)
                 {
@@ -129,7 +129,7 @@ namespace OmniSharp.Script
 
             var ignoreCorLibraryDuplicatedTypesMember = binderFlagsType?.GetField(IgnoreCorLibraryDuplicatedTypesField, BindingFlags.Static | BindingFlags.Public);
             var ignoreCorLibraryDuplicatedTypesValue = ignoreCorLibraryDuplicatedTypesMember?.GetValue(null);
-            if (ignoreCorLibraryDuplicatedTypesValue != null)
+            if (ignoreCorLibraryDuplicatedTypesValue is not null)
             {
                 topLevelBinderFlagsProperty?.SetValue(compilationOptions, ignoreCorLibraryDuplicatedTypesValue);
             }
@@ -146,7 +146,7 @@ namespace OmniSharp.Script
         {
             var defaultResolver = ScriptSourceResolver.Default;
 
-            if (searchPaths != null)
+            if (searchPaths is not null)
             {
                 defaultResolver = defaultResolver.WithSearchPaths(searchPaths);
 
@@ -163,7 +163,7 @@ namespace OmniSharp.Script
         {
             var defaultResolver = ScriptMetadataResolver.Default.WithBaseDirectory(_env.TargetDirectory);
 
-            if (searchPaths != null)
+            if (searchPaths is not null)
             {
                 defaultResolver = defaultResolver.WithSearchPaths(searchPaths);
 
@@ -188,7 +188,7 @@ namespace OmniSharp.Script
 
             // if RSP file was used, include the metadata references from RSP merged with the provided set
             // otherwise just use the provided metadata references
-            if (csharpCommandLineArguments != null && csharpCommandLineArguments.MetadataReferences.Any())
+            if (csharpCommandLineArguments is not null && csharpCommandLineArguments.MetadataReferences.Any())
             {
                 var resolvedRspReferences = csharpCommandLineArguments.ResolveMetadataReferences(_compilationOptions.Value.MetadataReferenceResolver);
                 foreach (var resolvedRspReference in resolvedRspReferences)
@@ -228,7 +228,7 @@ namespace OmniSharp.Script
                 name: csxFileName,
                 assemblyName: $"{csxFileName}.dll",
                 language: LanguageNames.CSharp,
-                compilationOptions: namespaces == null
+                compilationOptions: namespaces is null
                     ? _compilationOptions.Value
                     : _compilationOptions.Value.WithUsings(namespaces),
                 metadataReferences: references,
@@ -245,7 +245,7 @@ namespace OmniSharp.Script
             var runtimeMetadataReferenceResolverField = typeof(ScriptMetadataResolver).GetField(ResolverField, BindingFlags.Instance | BindingFlags.NonPublic);
             var runtimeMetadataReferenceResolverValue = runtimeMetadataReferenceResolverField?.GetValue(resolver);
 
-            if (runtimeMetadataReferenceResolverValue != null)
+            if (runtimeMetadataReferenceResolverValue is not null)
             {
                 var runtimeMetadataReferenceResolverType = typeof(CommandLineScriptGlobals).GetTypeInfo().Assembly.GetType(RuntimeMetadataReferenceResolverType);
                 var fileReferenceProviderField = runtimeMetadataReferenceResolverType?.GetField(FileReferenceProviderField, BindingFlags.Instance | BindingFlags.NonPublic);

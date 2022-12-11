@@ -13,7 +13,7 @@ namespace OmniSharp.Utilities
             var builder = g_builder;
             g_builder = null;
 
-            if (builder == null)
+            if (builder is null)
             {
                 builder = new StringBuilder();
             }

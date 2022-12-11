@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using OmniSharp.Eventing;
+using OmniSharp.Roslyn;
 using OmniSharp.Services;
 
 namespace OmniSharp.DotNetTest.Services

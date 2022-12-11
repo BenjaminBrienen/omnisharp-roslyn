@@ -7,7 +7,7 @@ namespace OmniSharp.Utilities
     {
         public static Lazy<Type> LazyGetType(this Lazy<Assembly> lazyAssembly, string typeName)
         {
-            if (lazyAssembly == null)
+            if (lazyAssembly is null)
             {
                 throw new ArgumentNullException(nameof(lazyAssembly));
             }
@@ -16,7 +16,7 @@ namespace OmniSharp.Utilities
             {
                 var type = lazyAssembly.Value.GetType(typeName);
 
-                if (type == null)
+                if (type is null)
                 {
                     throw new InvalidOperationException($"Could not get type '{typeName}'");
                 }
@@ -27,7 +27,7 @@ namespace OmniSharp.Utilities
 
         public static Lazy<MethodInfo> LazyGetMethod(this Lazy<Type> lazyType, string methodName)
         {
-            if (lazyType == null)
+            if (lazyType is null)
             {
                 throw new ArgumentNullException(nameof(lazyType));
             }
@@ -37,7 +37,7 @@ namespace OmniSharp.Utilities
                 var type = lazyType.Value;
                 var methodInfo = type.GetMethod(methodName);
 
-                if (methodInfo == null)
+                if (methodInfo is null)
                 {
                     throw new InvalidOperationException($"Could not get method '{methodName}' on type '{type.FullName}'");
                 }
@@ -48,7 +48,7 @@ namespace OmniSharp.Utilities
 
         public static Lazy<MethodInfo> LazyGetMethod(this Lazy<Type> lazyType, string methodName, BindingFlags bindingFlags)
         {
-            if (lazyType == null)
+            if (lazyType is null)
             {
                 throw new ArgumentNullException(nameof(lazyType));
             }
@@ -58,7 +58,7 @@ namespace OmniSharp.Utilities
                 var type = lazyType.Value;
                 var methodInfo = type.GetMethod(methodName, bindingFlags);
 
-                if (methodInfo == null)
+                if (methodInfo is null)
                 {
                     throw new InvalidOperationException($"Could not get method '{methodName}' on type '{type.FullName}'");
                 }
@@ -69,7 +69,7 @@ namespace OmniSharp.Utilities
 
         public static Lazy<MethodInfo> LazyGetProperty(this Lazy<Type> lazyType, string propertyName, bool getMethod)
         {
-            if (lazyType == null)
+            if (lazyType is null)
             {
                 throw new ArgumentNullException(nameof(lazyType));
             }
@@ -79,7 +79,7 @@ namespace OmniSharp.Utilities
                 var type = lazyType.Value;
                 var propertyInfo = type.GetProperty(propertyName);
 
-                if (propertyInfo == null)
+                if (propertyInfo is null)
                 {
                     throw new InvalidOperationException($"Could not get method '{propertyName}' on type '{type.FullName}'");
                 }
@@ -90,7 +90,7 @@ namespace OmniSharp.Utilities
 
         public static MethodInfo GetMethod(this Lazy<Type> lazyType, string methodName)
         {
-            if (lazyType == null)
+            if (lazyType is null)
             {
                 throw new ArgumentNullException(nameof(lazyType));
             }
@@ -98,7 +98,7 @@ namespace OmniSharp.Utilities
             var type = lazyType.Value;
             var methodInfo = type.GetMethod(methodName);
 
-            if (methodInfo == null)
+            if (methodInfo is null)
             {
                 throw new InvalidOperationException($"Could not get method '{methodName}' on type '{type.FullName}'");
             }
@@ -108,7 +108,7 @@ namespace OmniSharp.Utilities
 
         public static MethodInfo GetMethod(this Lazy<Type> lazyType, string methodName, BindingFlags bindingFlags)
         {
-            if (lazyType == null)
+            if (lazyType is null)
             {
                 throw new ArgumentNullException(nameof(lazyType));
             }
@@ -116,7 +116,7 @@ namespace OmniSharp.Utilities
             var type = lazyType.Value;
             var methodInfo = type.GetMethod(methodName, bindingFlags);
 
-            if (methodInfo == null)
+            if (methodInfo is null)
             {
                 throw new InvalidOperationException($"Could not get method '{methodName}' on type '{type.FullName}'");
             }
@@ -126,7 +126,7 @@ namespace OmniSharp.Utilities
 
         public static object CreateInstance(this Lazy<Type> lazyType, params object[] args)
         {
-            if (lazyType == null)
+            if (lazyType is null)
             {
                 throw new ArgumentNullException(nameof(lazyType));
             }
@@ -145,7 +145,7 @@ namespace OmniSharp.Utilities
             {
                 var defaultCtor = type.GetConstructor(new Type[] { });
 
-                return defaultCtor != null
+                return defaultCtor is not null
                     ? (T)Activator.CreateInstance(type)
                     : null;
             }
@@ -157,7 +157,7 @@ namespace OmniSharp.Utilities
 
         public static T Invoke<T>(this MethodInfo methodInfo, object obj, object[] args)
         {
-            if (methodInfo == null)
+            if (methodInfo is null)
             {
                 throw new ArgumentNullException(nameof(methodInfo));
             }
@@ -167,7 +167,7 @@ namespace OmniSharp.Utilities
 
         public static T Invoke<T>(this Lazy<MethodInfo> lazyMethodInfo, object obj, object[] args)
         {
-            if (lazyMethodInfo == null)
+            if (lazyMethodInfo is null)
             {
                 throw new ArgumentNullException(nameof(lazyMethodInfo));
             }
@@ -177,7 +177,7 @@ namespace OmniSharp.Utilities
 
         public static T InvokeStatic<T>(this MethodInfo methodInfo, object[] args)
         {
-            if (methodInfo == null)
+            if (methodInfo is null)
             {
                 throw new ArgumentNullException(nameof(methodInfo));
             }
@@ -187,13 +187,13 @@ namespace OmniSharp.Utilities
 
         public static T InvokeStatic<T>(this Lazy<Type> lazyType, string methodName, object[] args)
         {
-            if (lazyType == null)
+            if (lazyType is null)
             {
                 throw new ArgumentNullException(nameof(lazyType));
             }
 
             var method = lazyType.Value.GetMethod(methodName);
-            if (method == null)
+            if (method is null)
             {
                 throw new InvalidOperationException($"Failed to retrieve method {method}");
             }
@@ -203,7 +203,7 @@ namespace OmniSharp.Utilities
 
         public static T InvokeStatic<T>(this Lazy<MethodInfo> lazyMethodInfo, object[] args)
         {
-            if (lazyMethodInfo == null)
+            if (lazyMethodInfo is null)
             {
                 throw new ArgumentNullException(nameof(lazyMethodInfo));
             }
@@ -223,7 +223,7 @@ namespace OmniSharp.Utilities
 
         public static Lazy<FieldInfo> LazyGetField(this Lazy<Type> lazyType, string fieldName, BindingFlags bindingFlags)
         {
-            if (lazyType == null)
+            if (lazyType is null)
             {
                 throw new ArgumentNullException(nameof(lazyType));
             }
@@ -233,7 +233,7 @@ namespace OmniSharp.Utilities
                 var type = lazyType.Value;
                 var field = type.GetField(fieldName, bindingFlags);
 
-                if (field == null)
+                if (field is null)
                 {
                     throw new InvalidOperationException($"Could not get method '{fieldName}' on type '{type.FullName}'");
                 }

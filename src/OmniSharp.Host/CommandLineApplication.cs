@@ -48,7 +48,7 @@ namespace OmniSharp
             {
                 // we are interested in arg with "=" if it's first
                 // or not-first but not preceded by "-s" or "--source"
-                if (args[i] != null && args[i].Contains("="))
+                if (args[i] is not null && args[i].Contains("="))
                 {
                     if (i == 0)
                     {

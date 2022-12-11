@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using OmniSharp.Models;
+using OmniSharp.Models.V1;
 using OmniSharp.Models.V2;
 
 namespace OmniSharp.Extensions

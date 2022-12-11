@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Cake.Services.RequestHandlers.Navigation;
-using OmniSharp.Models;
 using OmniSharp.Models.FindSymbols;
+using OmniSharp.Models.v1;
 using TestUtility;
 using Xunit;
 using Xunit.Abstractions;

@@ -48,7 +48,7 @@ namespace OmniSharp.Logging
                     }
                 }
 
-                if (exception != null)
+                if (exception is not null)
                 {
                     if (builder.Length > 0)
                     {
@@ -90,7 +90,7 @@ namespace OmniSharp.Logging
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             var messageText = formatter(state, exception);
-            if (!string.IsNullOrEmpty(messageText) || exception != null)
+            if (!string.IsNullOrEmpty(messageText) || exception is not null)
             {
                 var message = CreateMessage(logLevel, messageText, exception);
                 WriteMessage(logLevel, message);

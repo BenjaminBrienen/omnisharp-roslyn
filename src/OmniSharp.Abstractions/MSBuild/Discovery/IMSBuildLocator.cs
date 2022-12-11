@@ -1,12 +1,11 @@
 ﻿using System.Collections.Immutable;
 
-namespace OmniSharp.MSBuild.Discovery
-{
-    public interface IMSBuildLocator
-    {
-        MSBuildInstance RegisteredInstance { get; }
+namespace OmniSharp.MSBuild.Discovery;
 
-        void RegisterInstance(MSBuildInstance instance);
-        ImmutableArray<MSBuildInstance> GetInstances();
-    }
+public interface IMSBuildLocator
+{
+    MSBuildInstance? RegisteredInstance { get; }
+
+    void RegisterInstance(MSBuildInstance instance);
+    ImmutableArray<MSBuildInstance> GetInstances();
 }

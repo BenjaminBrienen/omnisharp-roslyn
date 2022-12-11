@@ -20,6 +20,6 @@ namespace OmniSharp
 
         public Exception Exception { get; }
 
-        public bool HasError() => Exception != null;
+        public bool HasError() => Exception is not null;
     }
 }

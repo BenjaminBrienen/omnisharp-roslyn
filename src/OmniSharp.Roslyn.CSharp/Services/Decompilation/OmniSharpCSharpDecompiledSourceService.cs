@@ -47,7 +47,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Decompilation
 
             var reference = symbolCompilation.GetMetadataReference(symbol.ContainingAssembly);
             var assemblyLocation = (reference as PortableExecutableReference)?.FilePath;
-            if (assemblyLocation == null)
+            if (assemblyLocation is null)
             {
                 throw new NotSupportedException("Cannot_navigate_to_the_symbol_under_the_caret");
             }
@@ -133,7 +133,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Decompilation
                 stack.Push(ns.Name);
                 ns = ns.ContainingNamespace;
             }
-            while (ns != null && !ns.IsGlobalNamespace);
+            while (ns is not null && !ns.IsGlobalNamespace);
 
             return string.Join(".", stack);
         }

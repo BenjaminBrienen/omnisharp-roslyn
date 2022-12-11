@@ -11,6 +11,7 @@ using OmniSharp.Helpers;
 using OmniSharp.Mef;
 using OmniSharp.Models;
 using OmniSharp.Models.FindImplementations;
+using OmniSharp.Models.V1;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Navigation
 {
@@ -30,7 +31,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
             var document = _workspace.GetDocument(request.FileName);
             var response = new QuickFixResponse();
 
-            if (document != null)
+            if (document is not null)
             {
                 var semanticModel = await document.GetSemanticModelAsync();
                 var sourceText = await document.GetTextAsync();
@@ -39,7 +40,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
                 var quickFixes = new List<QuickFix>();
                 var symbol = await SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, _workspace);
 
-                if (symbol == null)
+                if (symbol is null)
                 {
                     return response;
                 }
@@ -76,7 +77,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
                 if (!symbol.IsAbstract)
                 {
                     // for partial methods, pick the one with body
-                    if (symbol is IMethodSymbol method && method.PartialImplementationPart != null)
+                    if (symbol is IMethodSymbol method && method.PartialImplementationPart is not null)
                     {
                         quickFixes.Add(method.PartialImplementationPart, _workspace);
                     }

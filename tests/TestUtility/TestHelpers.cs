@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using OmniSharp;
 using OmniSharp.FileWatching;
 using OmniSharp.MSBuild.Discovery;
+using OmniSharp.Roslyn;
 using OmniSharp.Roslyn.EditorConfig;
 using OmniSharp.Script;
 using OmniSharp.Services;

@@ -46,7 +46,7 @@ namespace OmniSharp.Services
 
         public static DotNetInfo Parse(List<string> lines)
         {
-            if (lines == null || lines.Count == 0)
+            if (lines is null || lines.Count == 0)
             {
                 return Empty;
             }

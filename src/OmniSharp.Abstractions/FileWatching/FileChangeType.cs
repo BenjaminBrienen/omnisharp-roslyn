@@ -1,11 +1,10 @@
-﻿namespace OmniSharp.FileWatching
+﻿namespace OmniSharp.FileWatching;
+
+public enum FileChangeType
 {
-    public enum FileChangeType
-    {
-        Unspecified = 0,
-        Change,
-        Create,
-        Delete,
-        DirectoryDelete
-    }
+    Unspecified = 0,
+    Change,
+    Create,
+    Delete,
+    DirectoryDelete
 }

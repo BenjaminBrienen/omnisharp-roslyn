@@ -29,7 +29,7 @@ namespace OmniSharp.DotNetTest
         {
             lock (_gate)
             {
-                if ((_testManager != null) != isStarted)
+                if ((_testManager is not null) != isStarted)
                 {
                     if (isStarted)
                     {
@@ -62,7 +62,7 @@ namespace OmniSharp.DotNetTest
         {
             lock (_gate)
             {
-                if (_tokenSource == null && _testManager == null)
+                if (_tokenSource is null && _testManager is null)
                 {
                     return;
                 }

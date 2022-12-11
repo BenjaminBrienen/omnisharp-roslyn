@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using OmniSharp.Cake.Utilities;
 using OmniSharp.Models.V2.CodeActions;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Refactoring.V2
 {
@@ -15,7 +16,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Refactoring.V2
 
         protected override async Task<TRequest> TranslateRequestAsync(TRequest request)
         {
-            if (request.Selection != null)
+            if (request.Selection is not null)
             {
                 var startLine = await LineIndexHelper.TranslateToGenerated(request.FileName, request.Selection.Start.Line, Workspace);
                 var endLine = request.Selection.Start.Line != request.Selection.End.Line

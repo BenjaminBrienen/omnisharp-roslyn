@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace OmniSharp.Mef
+namespace OmniSharp.Mef;
+
+public interface IRequestHandler<TRequest, TResponse> : IRequestHandler
 {
-    public interface IRequestHandler<TRequest, TResponse> : IRequestHandler
-    {
-        Task<TResponse> Handle(TRequest request);
-    }
+    Task<TResponse> Handle(TRequest request);
 }

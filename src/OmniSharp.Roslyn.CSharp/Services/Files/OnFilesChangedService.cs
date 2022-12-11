@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis;
 using OmniSharp.FileWatching;
 using OmniSharp.Mef;
 using OmniSharp.Models.FilesChanged;
+using OmniSharp.Models.V1.FilesChanged;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Files
 {

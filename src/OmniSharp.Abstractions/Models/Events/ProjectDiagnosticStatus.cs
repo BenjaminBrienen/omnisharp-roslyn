@@ -1,8 +1,7 @@
-namespace OmniSharp.Models.Events
+namespace OmniSharp.Models.Events;
+
+public enum ProjectDiagnosticStatus
 {
-    public enum ProjectDiagnosticStatus
-    {
-        Started = 0,
-        Ready = 1
-    }
+    Started = 0,
+    Ready = 1
 }

@@ -15,7 +15,7 @@ namespace OmniSharp.Roslyn.CSharp.Helpers
 
         public static string Escape(string markdown)
         {
-            if (markdown == null)
+            if (markdown is null)
                 return null;
             return EscapeRegex.Replace(markdown, @"\$1");
         }

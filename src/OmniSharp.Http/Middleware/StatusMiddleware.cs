@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Http.Middleware
 {

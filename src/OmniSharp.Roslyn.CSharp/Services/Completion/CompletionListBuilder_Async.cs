@@ -4,13 +4,13 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.ExternalAccess.OmniSharp.Completion;
 using Microsoft.CodeAnalysis.Text;
-using OmniSharp.Models;
-using OmniSharp.Models.v1.Completion;
+using OmniSharp.Models.V1;
+using OmniSharp.Models.V1.Completion;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using CompletionItem = OmniSharp.Models.v1.Completion.CompletionItem;
+using CompletionItem = OmniSharp.Models.V1.Completion.CompletionItem;
 using CSharpCompletionList = Microsoft.CodeAnalysis.Completion.CompletionList;
 using CSharpCompletionService = Microsoft.CodeAnalysis.Completion.CompletionService;
 

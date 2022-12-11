@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.ExternalAccess.OmniSharp.Completion;
 using Microsoft.CodeAnalysis.Options;
-using OmniSharp.Models.AutoComplete;
+using OmniSharp.Models.V1.AutoComplete;
 using OmniSharp.Roslyn.CSharp.Services.Completion;
 using OmniSharp.Utilities;
 
@@ -41,7 +41,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Intellisense
             if (completionItem.GetType() == _symbolCompletionItemType || properties.ContainsKey(Symbols))
             {
                 var decodedSymbolsTask = _getSymbolsAsync.InvokeStatic<Task<ImmutableArray<ISymbol>>>(new object[] { completionItem, document, default(CancellationToken) });
-                if (decodedSymbolsTask != null)
+                if (decodedSymbolsTask is not null)
                 {
                     return await decodedSymbolsTask;
                 }

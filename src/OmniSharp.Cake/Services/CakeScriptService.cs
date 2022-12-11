@@ -58,12 +58,12 @@ namespace OmniSharp.Cake.Services
                 _logger.LogWarning($"Cake.Bakery not found at path {serverExecutablePath}");
             }
 
-            return _generationService != null;
+            return _generationService is not null;
         }
 
         public CakeScript Generate(FileChange fileChange)
         {
-            if (_generationService == null)
+            if (_generationService is null)
             {
                 throw new InvalidOperationException("Cake.Bakery not initialized.");
             }

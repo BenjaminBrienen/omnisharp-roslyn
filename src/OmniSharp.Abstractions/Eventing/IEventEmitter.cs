@@ -1,7 +1,6 @@
-namespace OmniSharp.Eventing
+namespace OmniSharp.Eventing;
+
+public interface IEventEmitter
 {
-    public interface IEventEmitter
-    {
-        void Emit(string kind, object args);
-    }
+    void Emit(string kind, object args);
 }

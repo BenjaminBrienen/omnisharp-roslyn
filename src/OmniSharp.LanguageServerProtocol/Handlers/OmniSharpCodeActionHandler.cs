@@ -128,7 +128,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
             };
 
             var omnisharpCaResponse = await _runActionHandler.Handle(omnisharpCaRequest);
-            if (omnisharpCaResponse.Changes != null)
+            if (omnisharpCaResponse.Changes is not null)
             {
                 var edit = Helpers.ToWorkspaceEdit(
                     omnisharpCaResponse.Changes,

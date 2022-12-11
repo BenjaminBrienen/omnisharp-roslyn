@@ -41,13 +41,13 @@ namespace OmniSharp.Roslyn.CSharp.Services.Types
         {
             var document = _workspace.GetDocument(request.FileName);
             var response = new TypeLookupResponse();
-            if (document != null)
+            if (document is not null)
             {
                 var semanticModel = await document.GetSemanticModelAsync();
                 var sourceText = await document.GetTextAsync();
                 var position = sourceText.GetTextPosition(request);
                 var symbol = await SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, _workspace);
-                if (symbol != null)
+                if (symbol is not null)
                 {
                     response.Type = symbol.Kind == SymbolKind.NamedType ? 
                         symbol.ToDisplayString(DefaultFormat) : 

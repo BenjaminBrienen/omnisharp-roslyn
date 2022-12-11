@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
 using Microsoft.CodeAnalysis.Operations;
 using OmniSharp.Extensions;
-using OmniSharp.Models.v1.SourceGeneratedFile;
+using OmniSharp.Models.V1.SourceGeneratedFile;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +36,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
             CancellationToken cancellationToken)
         {
             var (metadataDocument, _) = await externalSourceService.GetAndAddExternalSymbolDocument(document.Project, symbol, cancellationToken);
-            if (metadataDocument != null)
+            if (metadataDocument is not null)
             {
                 var metadataLocation = await externalSourceService.GetExternalSymbolLocation(symbol, metadataDocument, cancellationToken);
                 return metadataLocation.GetMappedLineSpan();

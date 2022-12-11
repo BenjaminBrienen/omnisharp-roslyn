@@ -6,8 +6,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Helpers;
 using OmniSharp.Mef;
-using OmniSharp.Models;
 using OmniSharp.Models.CodeCheck;
+using OmniSharp.Models.V1;
 using OmniSharp.Options;
 using OmniSharp.Roslyn.CSharp.Workers.Diagnostics;
 
@@ -49,7 +49,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
                 .Where(x => string.IsNullOrEmpty(fileName)
                     || x.DocumentPath == fileName)
                 .DistinctDiagnosticLocationsByProject()
-                .Where(x => x.FileName != null);
+                .Where(x => x.FileName is not null);
 
             return new QuickFixResponse(diagnosticLocations);
         }

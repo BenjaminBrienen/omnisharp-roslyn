@@ -43,9 +43,9 @@ namespace OmniSharp.Utilities
 
             private void AddAttribute(ExtensionOrderAttribute attribute)
             {
-                if (attribute.Before != null)
+                if (attribute.Before is not null)
                     Before.Add(attribute.Before);
-                if (attribute.After != null)
+                if (attribute.After is not null)
                     After.Add(attribute.After);
             }
 

@@ -11,7 +11,8 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Workspace;
 using OmniSharp.Mef;
 using OmniSharp.Models;
-using OmniSharp.Models.FindSymbols;
+using OmniSharp.Models.V1;
+using OmniSharp.Models.V1.FindSymbols;
 
 namespace OmniSharp.LanguageServerProtocol.Handlers
 {

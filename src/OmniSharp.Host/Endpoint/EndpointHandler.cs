@@ -12,9 +12,10 @@ using Newtonsoft.Json.Linq;
 using OmniSharp.Endpoint.Exports;
 using OmniSharp.Mef;
 using OmniSharp.Models;
-using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Models.V1.UpdateBuffer;
 using OmniSharp.Plugins;
 using OmniSharp.Protocol;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Endpoint
 {
@@ -66,8 +67,8 @@ namespace OmniSharp.Endpoint
             _plugins = plugins;
             _workspace = host.GetExport<OmniSharpWorkspace>();
 
-            _hasLanguageProperty = metadata.RequestType.GetRuntimeProperty(nameof(LanguageModel.Language)) != null;
-            _hasFileNameProperty = metadata.RequestType.GetRuntimeProperty(nameof(Request.FileName)) != null;
+            _hasLanguageProperty = metadata.RequestType.GetRuntimeProperty(nameof(LanguageModel.Language)) is not null;
+            _hasFileNameProperty = metadata.RequestType.GetRuntimeProperty(nameof(Request.FileName)) is not null;
             _canBeAggregated = typeof(IAggregateResponse).IsAssignableFrom(metadata.ResponseType);
             _updateBufferHandler = updateBufferHandler;
 
@@ -106,9 +107,9 @@ namespace OmniSharp.Endpoint
         public async Task<object> Process(RequestPacket packet, LanguageModel model, JToken requestObject)
         {
             var request = requestObject.ToObject<TRequest>();
-            if (request is Request realRequest && _updateBufferHandler.Value != null)
+            if (request is Request realRequest && _updateBufferHandler.Value is not null)
             {
-                if (!string.IsNullOrWhiteSpace(realRequest.FileName) && (realRequest.Buffer != null || realRequest.Changes != null))
+                if (!string.IsNullOrWhiteSpace(realRequest.FileName) && (realRequest.Buffer is not null || realRequest.Changes is not null))
                 {
                     await _updateBufferHandler.Value.Process(packet, model, requestObject);
                 }
@@ -175,7 +176,7 @@ namespace OmniSharp.Endpoint
 
                 foreach (IAggregateResponse response in await Task.WhenAll(responses))
                 {
-                    if (aggregateResponse != null)
+                    if (aggregateResponse is not null)
                     {
                         aggregateResponse = aggregateResponse.Merge(response);
                     }
@@ -200,14 +201,14 @@ namespace OmniSharp.Endpoint
             foreach (object response in await Task.WhenAll(responses))
             {
                 var canBeEmptyResponse = response as ICanBeEmptyResponse;
-                if (canBeEmptyResponse != null)
+                if (canBeEmptyResponse is not null)
                 {
                     if (!canBeEmptyResponse.IsEmpty)
                     {
                         return response;
                     }
                 }
-                else if (response != null)
+                else if (response is not null)
                 {
                     return response;
                 }
@@ -250,7 +251,7 @@ namespace OmniSharp.Endpoint
 
             foreach (IAggregateResponse exportResponse in await Task.WhenAll(responses))
             {
-                if (aggregateResponse != null)
+                if (aggregateResponse is not null)
                 {
                     aggregateResponse = aggregateResponse.Merge(exportResponse);
                 }
@@ -262,7 +263,7 @@ namespace OmniSharp.Endpoint
 
             object response = aggregateResponse;
 
-            if (response != null)
+            if (response is not null)
             {
                 return response;
             }
@@ -274,7 +275,7 @@ namespace OmniSharp.Endpoint
         {
             var response = new LanguageModel();
             var jobject = jtoken as JObject;
-            if (jobject == null)
+            if (jobject is null)
             {
                 return response;
             }

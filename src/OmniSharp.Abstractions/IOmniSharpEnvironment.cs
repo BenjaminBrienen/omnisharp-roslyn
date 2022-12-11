@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
-namespace OmniSharp
+namespace OmniSharp;
+
+public interface IOmniSharpEnvironment
 {
-    public interface IOmniSharpEnvironment
-    {
-        LogLevel LogLevel { get; }
-        int HostProcessId { get; }
-        string TargetDirectory { get; }
-        string SolutionFilePath { get; }
-        string SharedDirectory { get; }
-        string[] AdditionalArguments { get; }
-    }
+    LogLevel LogLevel { get; }
+    int HostProcessId { get; }
+    string TargetDirectory { get; }
+    string? SolutionFilePath { get; }
+    string? SharedDirectory { get; }
+    IEnumerable<string>? AdditionalArguments { get; }
 }

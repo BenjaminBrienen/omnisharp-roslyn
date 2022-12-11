@@ -9,6 +9,7 @@ using OmniSharp.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models;
 using OmniSharp.Models.SignatureHelp;
+using OmniSharp.Models.V1.SignatureHelp;
 using OmniSharp.Roslyn.CSharp.Services.Documentation;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Signatures
@@ -30,7 +31,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
             foreach (var document in _workspace.GetDocuments(request.FileName))
             {
                 var invocation = await GetInvocation(document, request);
-                if (invocation != null)
+                if (invocation is not null)
                 {
                     invocations.Add(invocation);
                 }
@@ -69,10 +70,10 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
                     var throughExpression = ((MemberAccessExpressionSyntax)invocation.Receiver).Expression;
                     throughSymbol = invocation.SemanticModel.GetSpeculativeSymbolInfo(invocation.Position, throughExpression, SpeculativeBindingOption.BindAsExpression).Symbol;
                     throughType = invocation.SemanticModel.GetSpeculativeTypeInfo(invocation.Position, throughExpression, SpeculativeBindingOption.BindAsTypeOrNamespace).Type;
-                    var includeInstance = (throughSymbol != null && !(throughSymbol is ITypeSymbol)) ||
+                    var includeInstance = (throughSymbol is not null && !(throughSymbol is ITypeSymbol)) ||
                         throughExpression is LiteralExpressionSyntax ||
                         throughExpression is TypeOfExpressionSyntax;
-                    var includeStatic = (throughSymbol is INamedTypeSymbol) || throughType != null;
+                    var includeStatic = (throughSymbol is INamedTypeSymbol) || throughType is not null;
                     methodGroup = methodGroup.Where(m => (m.IsStatic && includeStatic) || (!m.IsStatic && includeInstance));
                 }
                 else if (invocation.Receiver is SimpleNameSyntax && invocation.IsInStaticContext)
@@ -110,7 +111,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
             var node = root.FindToken(position).Parent;
 
             // Walk up until we find a node that we're interested in.
-            while (node != null)
+            while (node is not null)
             {
                 if (node is InvocationExpressionSyntax invocation && invocation.ArgumentList.Span.Contains(position))
                 {
@@ -149,7 +150,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Signatures
             var definitionEnum = parameters.GetEnumerator();
             while (invocationEnum.MoveNext() && definitionEnum.MoveNext())
             {
-                if (invocationEnum.Current.ConvertedType == null)
+                if (invocationEnum.Current.ConvertedType is null)
                 {
                     // 1 point for having a parameter
                     score += 1;

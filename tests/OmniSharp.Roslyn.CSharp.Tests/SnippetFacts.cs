@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using OmniSharp.Models.AutoComplete;
+using OmniSharp.Models.v1.AutoComplete;
 using TestUtility;
 using Xunit;
 using Xunit.Abstractions;

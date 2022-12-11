@@ -16,7 +16,8 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 using OmniSharp.Models;
 using OmniSharp.Models.FileClose;
 using OmniSharp.Models.FileOpen;
-using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Models.V1.UpdateBuffer;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.LanguageServerProtocol.Handlers
 {
@@ -71,14 +72,14 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         {
             var document = _workspace.GetDocument(Helpers.FromUri(uri));
             var langaugeId = "csharp";
-            if (document == null) return new TextDocumentAttributes(uri, uri.Scheme, langaugeId);
+            if (document is null) return new TextDocumentAttributes(uri, uri.Scheme, langaugeId);
             return new TextDocumentAttributes(uri, uri.Scheme, langaugeId);
         }
 
         public override async Task<Unit> Handle(DidChangeTextDocumentParams notification, CancellationToken cancellationToken)
         {
             var contentChanges = notification.ContentChanges.ToArray();
-            if (contentChanges.Length == 1 && contentChanges[0].Range == null)
+            if (contentChanges.Length == 1 && contentChanges[0].Range is null)
             {
                 var change = contentChanges[0];
                 await _bufferHandler.Handle(new UpdateBufferRequest()
@@ -116,7 +117,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
 
         public override async Task<Unit> Handle(DidOpenTextDocumentParams notification, CancellationToken cancellationToken)
         {
-            if (_openHandler != null)
+            if (_openHandler is not null)
             {
                 await _openHandler.Handle(new FileOpenRequest()
                 {
@@ -132,7 +133,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
 
         public override async Task<Unit> Handle(DidCloseTextDocumentParams notification, CancellationToken cancellationToken)
         {
-            if (_closeHandler != null)
+            if (_closeHandler is not null)
             {
                 await _closeHandler.Handle(new FileCloseRequest()
                 {

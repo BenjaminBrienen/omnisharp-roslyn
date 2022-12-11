@@ -38,7 +38,7 @@ namespace OmniSharp.MSBuild.Logging
         {
             string diagnosticText = null;
 
-            // https://github.com/dotnet/msbuild/blob/v16.8.3/src/Tasks/Resources/Strings.resx#L2155-L2158
+            // https://github.com/dotnet/msbuild/blob/V16.8.3/src/Tasks/Resources/Strings.resx#L2155-L2158
             // for MSB3644, we should print a different message on Unix because the default one is Windows-specific
             if (args.Code?.Equals("MSB3644", StringComparison.OrdinalIgnoreCase) == true)
             {

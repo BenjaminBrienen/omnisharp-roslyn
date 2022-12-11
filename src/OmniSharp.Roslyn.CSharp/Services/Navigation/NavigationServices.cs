@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using OmniSharp.Helpers;
 using OmniSharp.Mef;
 using OmniSharp.Models.Navigate;
+using OmniSharp.Models.V1.Navigate;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Navigation
 {

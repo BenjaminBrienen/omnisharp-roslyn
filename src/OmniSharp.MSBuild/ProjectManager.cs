@@ -27,6 +27,7 @@ using OmniSharp.Utilities;
 using System.Reflection;
 using Microsoft.CodeAnalysis.Diagnostics;
 using OmniSharp.Roslyn.EditorConfig;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.MSBuild
 {
@@ -138,7 +139,7 @@ namespace OmniSharp.MSBuild
                 }
 
                 projectDir = Path.GetDirectoryName(projectDir);
-            } while (projectDir != null);
+            } while (projectDir is not null);
 
             // Wait for all queued projects to load to ensure that workspace is fully up to date before this method completes.
             // If the project for the document was loaded before and there are no other projects to load at the moment, the call below will be no-op.
@@ -206,7 +207,7 @@ namespace OmniSharp.MSBuild
                         break;
                     }
 
-                    if (projectByFilePathMap == null)
+                    if (projectByFilePathMap is null)
                     {
                         projectByFilePathMap = new Dictionary<string, ProjectToUpdate>(StringComparer.OrdinalIgnoreCase);
                         projectList = new List<ProjectToUpdate>();
@@ -238,7 +239,7 @@ namespace OmniSharp.MSBuild
                     if (_projectFiles.TryGetValue(currentProject.FilePath, out ProjectFileInfo projectFileInfo))
                     {
                         (projectFileInfo, loadedEventArgs) = ReloadProject(projectFileInfo);
-                        if (projectFileInfo == null)
+                        if (projectFileInfo is null)
                         {
                             _failedToLoadProjectFiles.Add(currentProject.FilePath);
                             continue;
@@ -250,7 +251,7 @@ namespace OmniSharp.MSBuild
                     else
                     {
                         (projectFileInfo, loadedEventArgs) = LoadProject(currentProject.FilePath, currentProject.ProjectIdInfo);
-                        if (projectFileInfo == null)
+                        if (projectFileInfo is null)
                         {
                             _failedToLoadProjectFiles.Add(currentProject.FilePath);
                             continue;
@@ -261,14 +262,14 @@ namespace OmniSharp.MSBuild
                     }
                 }
 
-                if (projectByFilePathMap != null)
+                if (projectByFilePathMap is not null)
                 {
                     foreach (var project in projectList)
                     {
                         UpdateProject(project.FilePath, project.ChangeTriggerPath);
 
                         // Fire loaded events
-                        if (project.LoadedEventArgs != null)
+                        if (project.LoadedEventArgs is not null)
                         {
                             foreach (var eventSink in _eventSinks)
                             {
@@ -315,7 +316,7 @@ namespace OmniSharp.MSBuild
             {
                 var (projectFileInfo, diagnostics, eventArgs) = loader();
 
-                if (projectFileInfo != null)
+                if (projectFileInfo is not null)
                 {
                     _logger.LogInformation($"Successfully loaded project file '{projectFilePath}'.");
                 }
@@ -415,7 +416,7 @@ namespace OmniSharp.MSBuild
                 }
             }
 
-            if (projectFileInfo.RuleSet?.FilePath != null)
+            if (projectFileInfo.RuleSet?.FilePath is not null)
             {
                 _fileSystemWatcher.Watch(projectFileInfo.RuleSet.FilePath, (file, changeType) =>
                 {
@@ -462,7 +463,7 @@ namespace OmniSharp.MSBuild
             }
 
             var project = _workspace.CurrentSolution.GetProject(projectFileInfo.Id);
-            if (project == null)
+            if (project is null)
             {
                 _logger.LogError($"Could not locate project in workspace: {projectFileInfo.FilePath}");
                 return;
@@ -470,7 +471,7 @@ namespace OmniSharp.MSBuild
 
             // if the update was triggered by a change to an editorconfig file, only reload that analyzer config file
             // this will propagate a reanalysis of the project
-            if (changeTriggerFilePath != null && changeTriggerFilePath.ToLowerInvariant().EndsWith(".editorconfig"))
+            if (changeTriggerFilePath is not null && changeTriggerFilePath.ToLowerInvariant().EndsWith(".editorconfig"))
             {
                 UpdateAnalyzerConfigFile(project, changeTriggerFilePath);
                 return;
@@ -496,7 +497,7 @@ namespace OmniSharp.MSBuild
         {
             // if project already has compilation options, then we shall use that to compute new compilation options based on the project file
             // and then only set those if it's really necessary
-            if (project.CompilationOptions != null && project.CompilationOptions is CSharpCompilationOptions existingCompilationOptions)
+            if (project.CompilationOptions is not null && project.CompilationOptions is CSharpCompilationOptions existingCompilationOptions)
             {
                 var newCompilationOptions = projectFileInfo.CreateCompilationOptions(existingCompilationOptions);
                 if (newCompilationOptions != existingCompilationOptions)
@@ -593,7 +594,7 @@ namespace OmniSharp.MSBuild
             }
 
             var currentAnalyzerConfigDocument = project.AnalyzerConfigDocuments.FirstOrDefault(x => x.FilePath.Equals(analyzerConfigFile));
-            if (currentAnalyzerConfigDocument == null)
+            if (currentAnalyzerConfigDocument is null)
             {
                 _logger.LogDebug($"The change was reported in {analyzerConfigFile} but it doesn't belong to any project.");
                 return;
@@ -618,7 +619,7 @@ namespace OmniSharp.MSBuild
             }
 
             var currentAnalyzerConfigDocument = project.AnalyzerConfigDocuments.FirstOrDefault(x => x.FilePath.Equals(analyzerConfigFile));
-            if (currentAnalyzerConfigDocument == null)
+            if (currentAnalyzerConfigDocument is null)
             {
                 _logger.LogDebug($"The change was reported in {analyzerConfigFile} but it doesn't belong to any project.");
                 return;
@@ -780,7 +781,7 @@ namespace OmniSharp.MSBuild
                     }
                 }
 
-                if (referencedProject == null)
+                if (referencedProject is null)
                 {
                     _logger.LogWarning($"Unable to resolve project reference '{projectReferencePath}' for '{project.Name}'.");
                     continue;
@@ -900,7 +901,7 @@ namespace OmniSharp.MSBuild
                     continue;
                 }
 
-                if (referencedProject.TargetPath != null && referencedProject.TargetPath.Equals(targetPath, StringComparison.OrdinalIgnoreCase))
+                if (referencedProject.TargetPath is not null && referencedProject.TargetPath.Equals(targetPath, StringComparison.OrdinalIgnoreCase))
                 {
                     projectReferenceWithTarget = referencedProject;
                     return true;

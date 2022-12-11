@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Text;
 using OmniSharp.Models.SemanticHighlight;
 using OmniSharp.Models.V2;
+using OmniSharp.Models.V2.SemanticHighlight;
 using OmniSharp.Roslyn.CSharp.Services.SemanticHighlight;
 using TestUtility;
 using Xunit;

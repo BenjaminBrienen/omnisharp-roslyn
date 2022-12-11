@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Microsoft.CodeAnalysis;
-using OmniSharp.Models.TypeLookup;
+using OmniSharp.Models.V1.TypeLookup;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Documentation
 {
@@ -120,7 +120,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Documentation
 
         private static string GetCref(string cref)
         {
-            if (cref == null || cref.Trim().Length == 0)
+            if (cref is null || cref.Trim().Length == 0)
             {
                 return "";
             }
@@ -176,4 +176,3 @@ namespace OmniSharp.Roslyn.CSharp.Services.Documentation
         }
     }
 }
-

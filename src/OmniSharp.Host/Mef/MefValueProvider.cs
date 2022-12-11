@@ -7,9 +7,9 @@ namespace OmniSharp.Mef
     internal class MefValueProvider<T> : ExportDescriptorProvider
     {
         private readonly T _item;
-        private readonly IDictionary<string, object> _metadata;
+        private readonly IDictionary<string, object>? _metadata;
 
-        public MefValueProvider(T item, IDictionary<string, object> metadata)
+        public MefValueProvider(T item, IDictionary<string, object>? metadata)
         {
             _item = item;
             _metadata = metadata;
@@ -28,7 +28,7 @@ namespace OmniSharp.Mef
 
     internal static class MefValueProvider
     {
-        public static MefValueProvider<T> From<T>(T value, IDictionary<string, object> metadata = null)
+        public static MefValueProvider<T> From<T>(T value, IDictionary<string, object>? metadata = null)
         {
             return new MefValueProvider<T>(value, metadata);
         }

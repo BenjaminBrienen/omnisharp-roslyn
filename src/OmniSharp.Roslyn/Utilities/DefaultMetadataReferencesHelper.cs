@@ -22,7 +22,7 @@ namespace OmniSharp.Roslyn.Utilities
             };
 
            return assemblies
-                .Where(a => a != null)
+                .Where(a => a is not null)
                 .Select(a => a.Location)
                 .Distinct();
 

@@ -4,44 +4,48 @@ using OmniSharp.Mef;
 using OmniSharp.Models.Events;
 using OmniSharp.MSBuild.Notification;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition.Hosting.Core;
 using System.Threading;
 
-namespace OmniSharp.MSBuild.Tests
+namespace OmniSharp.MSBuild.Tests;
+
+public partial class ProjectLoadListenerTests
 {
-    public partial class ProjectLoadListenerTests
+    private sealed class ProjectLoadTestEventEmitter : IEventEmitter, IDisposable
     {
-        public class ProjectLoadTestEventEmitter : IEventEmitter
+        public ImmutableArray<ProjectConfigurationMessage> ReceivedMessages { get; private set; } = ImmutableArray<ProjectConfigurationMessage>.Empty;
+        private readonly ManualResetEvent _messageEvent = new(false);
+
+        public void WaitForProjectUpdate()
         {
-            public ImmutableArray<ProjectConfigurationMessage> ReceivedMessages { get; private set; } = ImmutableArray<ProjectConfigurationMessage>.Empty;
-            private readonly ManualResetEvent _messageEvent = new ManualResetEvent(false);
+            _messageEvent.Reset();
+            _messageEvent.WaitOne(TimeSpan.FromSeconds(5));
+        }
 
-            public void WaitForProjectUpdate()
+        public ExportDescriptorProvider[] AsExportDescriptionProvider(ILoggerFactory loggerFactory)
+        {
+            var listener = new ProjectLoadListener(loggerFactory, this);
+
+            return new ExportDescriptorProvider[]
             {
-                _messageEvent.Reset();
-                _messageEvent.WaitOne(TimeSpan.FromSeconds(5));
-            }
+                MefValueProvider.From<IMSBuildEventSink>(listener)
+            };
+        }
 
-            public ExportDescriptorProvider[] AsExportDescriptionProvider(ILoggerFactory loggerFactory)
+        public void Emit(string kind, object args)
+        {
+            if (args is ProjectConfigurationMessage projectConfigurationMessage)
             {
-                var listener = new ProjectLoadListener(loggerFactory, this);
-
-                return new ExportDescriptorProvider[]
-                {
-                    MefValueProvider.From<IMSBuildEventSink>(listener)
-                };
+                ReceivedMessages = ReceivedMessages.Add(projectConfigurationMessage);
+                _messageEvent.Set();
             }
+        }
 
-            public void Emit(string kind, object args)
-            {
-                if(args is ProjectConfigurationMessage)
-                {
-                    ReceivedMessages = ReceivedMessages.Add((ProjectConfigurationMessage)args);
-                    _messageEvent.Set();
-                }
-            }
+        public void Dispose()
+        {
+            _messageEvent.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

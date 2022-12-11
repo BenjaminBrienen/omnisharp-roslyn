@@ -1,13 +1,12 @@
 using Newtonsoft.Json;
-namespace OmniSharp.Models.Events
-{
-    public class ErrorMessage
-    {
-        public string Text { get; set; }
-        public string FileName { get; set; }
-        [JsonConverter(typeof(ZeroBasedIndexConverter))]
-        public int Line { get; set; }
-        [JsonConverter(typeof(ZeroBasedIndexConverter))]
-        public int Column { get; set; }
-    }
-}
+namespace OmniSharp.Models.Events;
+
+public record ErrorMessage
+(
+    string? FileName,
+    string Text,
+    [JsonConverter(typeof(ZeroBasedIndexConverter))]
+    int? Line = null,
+    [JsonConverter(typeof(ZeroBasedIndexConverter))]
+    int? Column = null
+);

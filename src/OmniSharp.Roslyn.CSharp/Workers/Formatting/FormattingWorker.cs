@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.ExternalAccess.OmniSharp.Formatting;
 using Microsoft.CodeAnalysis.ExternalAccess.OmniSharp.Options;
 using Microsoft.CodeAnalysis.Text;
 using OmniSharp.Extensions;
-using OmniSharp.Models;
+using OmniSharp.Models.V1;
 using OmniSharp.Options;
 using OmniSharp.Roslyn.Utilities;
 
@@ -32,9 +32,9 @@ namespace OmniSharp.Roslyn.CSharp.Workers.Formatting
             {
                 // format after ; and }
                 var root = await document.GetSyntaxRootAsync();
-                Debug.Assert(root != null);
+                Debug.Assert(root is not null);
                 var node = FindFormatTarget(root!, position);
-                if (node != null)
+                if (node is not null)
                 {
                     return await GetFormattingChanges(document, node.FullSpan.Start, node.FullSpan.End, omnisharpOptions);
                 }
@@ -101,7 +101,7 @@ namespace OmniSharp.Roslyn.CSharp.Workers.Formatting
 
         private static async Task<Document> FormatDocument(Document document, OmniSharpOptions omnisharpOptions, TextSpan? textSpan = null)
         {
-            var spans = (textSpan != null) ? new[] { textSpan.Value } : null;
+            var spans = (textSpan is not null) ? new[] { textSpan.Value } : null;
             var formattingOtions = await GetFormattingOptionsAsync(document, omnisharpOptions);
             var newDocument = await OmniSharpFormatter.FormatAsync(document, spans, formattingOtions, CancellationToken.None);
             if (omnisharpOptions.FormattingOptions.OrganizeImports)
@@ -243,7 +243,7 @@ namespace OmniSharp.Roslyn.CSharp.Workers.Formatting
                 OmniSharpDocumentationCommentsSnippetService.GetDocumentationCommentSnippetOnEnterTyped(document, syntaxTree!, text, position, docCommentOptions, CancellationToken.None) :
                 OmniSharpDocumentationCommentsSnippetService.GetDocumentationCommentSnippetOnCharacterTyped(document, syntaxTree!, text, position, docCommentOptions, CancellationToken.None);
 
-            if (snippet == null)
+            if (snippet is null)
             {
                 return null;
             }

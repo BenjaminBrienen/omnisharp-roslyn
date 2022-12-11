@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using OmniSharp.Models;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Helpers
 {

@@ -5,7 +5,9 @@ using OmniSharp.Cake.Extensions;
 using OmniSharp.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models;
-using OmniSharp.Models.FindSymbols;
+using OmniSharp.Models.V1;
+using OmniSharp.Models.V1.FindSymbols;
+using OmniSharp.Roslyn;
 using static OmniSharp.Cake.Constants;
 using SymbolFilter = Microsoft.CodeAnalysis.SymbolFilter;
 

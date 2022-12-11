@@ -33,7 +33,7 @@ namespace OmniSharp.Cake.Configuration
 
         public ConfigurationToken Expect(ConfigurationTokenKind tokenType, string message)
         {
-            if (Current == null || Current.Kind != tokenType)
+            if (Current is null || Current.Kind != tokenType)
             {
                 throw new InvalidOperationException(message);
             }

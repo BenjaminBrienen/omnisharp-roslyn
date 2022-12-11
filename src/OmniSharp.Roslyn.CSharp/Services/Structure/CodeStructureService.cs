@@ -35,7 +35,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         {
             // To provide complete code structure for the document wait until all projects are loaded.
             var document = await _workspace.GetDocumentFromFullProjectModelAsync(request.FileName);
-            if (document == null)
+            if (document is null)
             {
                 return new CodeStructureResponse { Elements = Array.Empty<CodeElement>() };
             }
@@ -62,7 +62,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
             {
                 foreach (var element in CreateCodeElements(node, text, semanticModel))
                 {
-                    if (element != null)
+                    if (element is not null)
                     {
                         results.Add(element);
                     }
@@ -110,7 +110,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private CodeElement CreateCodeElement(TypeDeclarationSyntax typeDeclaration, SourceText text, SemanticModel semanticModel)
         {
             var symbol = semanticModel.GetDeclaredSymbol(typeDeclaration);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return null;
             }
@@ -139,7 +139,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private CodeElement CreateCodeElement(DelegateDeclarationSyntax delegateDeclaration, SourceText text, SemanticModel semanticModel)
         {
             var symbol = semanticModel.GetDeclaredSymbol(delegateDeclaration);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return null;
             }
@@ -160,7 +160,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private CodeElement CreateCodeElement(EnumDeclarationSyntax enumDeclaration, SourceText text, SemanticModel semanticModel)
         {
             var symbol = semanticModel.GetDeclaredSymbol(enumDeclaration);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return null;
             }
@@ -189,7 +189,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private CodeElement CreateCodeElement(BaseNamespaceDeclarationSyntax namespaceDeclaration, SourceText text, SemanticModel semanticModel)
         {
             var symbol = semanticModel.GetDeclaredSymbol(namespaceDeclaration);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return null;
             }
@@ -217,7 +217,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private CodeElement CreateCodeElement(BaseMethodDeclarationSyntax baseMethodDeclaration, SourceText text, SemanticModel semanticModel)
         {
             var symbol = semanticModel.GetDeclaredSymbol(baseMethodDeclaration);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return null;
             }
@@ -238,7 +238,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private CodeElement CreateCodeElement(BasePropertyDeclarationSyntax basePropertyDeclaration, SourceText text, SemanticModel semanticModel)
         {
             var symbol = semanticModel.GetDeclaredSymbol(basePropertyDeclaration);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return null;
             }
@@ -259,7 +259,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private CodeElement CreateCodeElement(VariableDeclaratorSyntax variableDeclarator, BaseFieldDeclarationSyntax baseFieldDeclaration, SourceText text, SemanticModel semanticModel)
         {
             var symbol = semanticModel.GetDeclaredSymbol(variableDeclarator);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return null;
             }
@@ -280,7 +280,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private CodeElement CreateCodeElement(EnumMemberDeclarationSyntax enumMemberDeclaration, SourceText text, SemanticModel semanticModel)
         {
             var symbol = semanticModel.GetDeclaredSymbol(enumMemberDeclaration);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return null;
             }
@@ -353,7 +353,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         private void AddSymbolProperties(ISymbol symbol, CodeElement.Builder builder)
         {
             var accessibility = symbol.GetAccessibilityString();
-            if (accessibility != null)
+            if (accessibility is not null)
             {
                 builder.AddProperty(SymbolPropertyNames.Accessibility, accessibility);
             }

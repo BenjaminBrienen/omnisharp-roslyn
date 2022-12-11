@@ -159,7 +159,7 @@ namespace OmniSharp.Script
             }
 
             var metadataReference = _metadataFileReferenceCache.GetMetadataReference(fileReference);
-            if (metadataReference == null)
+            if (metadataReference is null)
             {
                 _logger.LogWarning($"Couldn't add reference to '{fileReference}' because the loaded metadata reference was null.");
                 return;

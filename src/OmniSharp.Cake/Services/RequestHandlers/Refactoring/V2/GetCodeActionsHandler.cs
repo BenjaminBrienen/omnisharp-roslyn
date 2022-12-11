@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OmniSharp.Mef;
 using OmniSharp.Models.V2.CodeActions;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Refactoring.V2
 {
@@ -11,14 +12,14 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Refactoring.V2
     {
         [ImportingConstructor]
         public GetCodeActionsHandler(
-            OmniSharpWorkspace workspace) 
+            OmniSharpWorkspace workspace)
             : base(workspace)
         {
         }
 
         protected override Task<GetCodeActionsResponse> TranslateResponse(GetCodeActionsResponse response, GetCodeActionsRequest request)
         {
-            if (response?.CodeActions == null)
+            if (response?.CodeActions is null)
             {
                 return Task.FromResult(response);
             }

@@ -8,6 +8,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Models.SemanticHighlight;
+using OmniSharp.Models.V2.SemanticHighlight;
 using OmniSharp.Roslyn.CSharp.Services.SemanticHighlight;
 using static OmniSharp.LanguageServerProtocol.Helpers;
 
@@ -18,7 +19,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         public static IEnumerable<IJsonRpcHandler> Enumerate(RequestHandlers handlers)
         {
             foreach (var (selector, handler) in handlers.OfType<Mef.IRequestHandler<SemanticHighlightRequest, SemanticHighlightResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpSemanticTokensHandler(handler, selector);
         }
 

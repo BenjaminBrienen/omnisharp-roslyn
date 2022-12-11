@@ -48,7 +48,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
 
             var project = _workspace.CurrentSolution.GetProject(projectId);
 
-            if (project == null)
+            if (project is null)
             {
                 _cache.TryRemove(projectId, out _);
                 return ImmutableArray<CodeFixProvider>.Empty;
@@ -68,13 +68,13 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
                     try
                     {
                         var attribute = x.GetCustomAttribute<ExportCodeFixProviderAttribute>();
-                        if (attribute == null)
+                        if (attribute is null)
                         {
                             _logger.LogTrace($"Skipping code fix provider '{x.AsType()}' because it is missing the ExportCodeFixProviderAttribute.");
                             return null;
                         }
 
-                        if (attribute.Languages == null || !attribute.Languages.Contains(project.Language))
+                        if (attribute.Languages is null || !attribute.Languages.Contains(project.Language))
                         {
                             _logger.LogInformation($"Skipping code fix provider '{x.AsType()}' because its language '{attribute.Languages?.FirstOrDefault()}' doesn't match '{project.Language}'.");
                             return null;
@@ -88,7 +88,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
                         return null;
                     }
                 })
-                .Where(x => x != null);
+                .Where(x => x is not null);
 
             var builtInCodeFixes = _providers.SelectMany(provider => provider.CodeFixProviders);
 

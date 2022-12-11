@@ -3,7 +3,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Mef;
-using OmniSharp.Models.v1.SourceGeneratedFile;
+using OmniSharp.Models.V1.SourceGeneratedFile;
 using System.Collections.Generic;
 using System.Composition;
 using System.Threading;
@@ -63,7 +63,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
         {
             var documentId = GetId(request);
             var document = await _workspace.CurrentSolution.GetSourceGeneratedDocumentAsync(documentId, CancellationToken.None);
-            if (document == null)
+            if (document is null)
             {
                 lock (_lock)
                 {

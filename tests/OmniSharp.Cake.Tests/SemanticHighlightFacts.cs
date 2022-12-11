@@ -6,6 +6,7 @@ using OmniSharp.Cake.Services.RequestHandlers.SemanticHighlight;
 using OmniSharp.Models.SemanticHighlight;
 using OmniSharp.Models.UpdateBuffer;
 using OmniSharp.Models.V2;
+using OmniSharp.Models.V2.SemanticHighlight;
 using TestUtility;
 using Xunit;
 using Xunit.Abstractions;

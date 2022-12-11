@@ -164,30 +164,30 @@ namespace OmniSharp.DotNetTest
                 _process.KillChildrenAndThis();
             }
 
-            if (_process != null)
+            if (_process is not null)
             {
                 _process = null;
             }
 
-            if (_reader != null)
+            if (_reader is not null)
             {
                 _reader.Dispose();
                 _reader = null;
             }
 
-            if (_writer != null)
+            if (_writer is not null)
             {
                 _writer.Dispose();
                 _writer = null;
             }
 
-            if (_stream != null)
+            if (_stream is not null)
             {
                 _stream.Dispose();
                 _stream = null;
             }
 
-            if (_socket != null)
+            if (_socket is not null)
             {
                 _socket.Dispose();
                 _socket = null;
@@ -258,7 +258,7 @@ namespace OmniSharp.DotNetTest
         {
             var rawMessage = await Task.Run(() => ReadRawMessage(cancellationToken));
 
-            if (rawMessage == null)
+            if (rawMessage is null)
             {
                 return (succeeded: false, message: null);
             }

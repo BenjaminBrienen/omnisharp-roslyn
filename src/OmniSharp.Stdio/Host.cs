@@ -11,12 +11,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OmniSharp.Endpoint;
 using OmniSharp.Mef;
-using OmniSharp.Models.UpdateBuffer;
 using OmniSharp.Plugins;
 using OmniSharp.Services;
 using OmniSharp.Protocol;
 using OmniSharp.Utilities;
 using System.Globalization;
+using OmniSharp.Models;
+using OmniSharp.Roslyn;
+using OmniSharp.Models.V1.UpdateBuffer;
 
 namespace OmniSharp.Stdio
 {
@@ -142,7 +144,7 @@ namespace OmniSharp.Stdio
                 while (!_cancellationTokenSource.IsCancellationRequested)
                 {
                     var line = await _input.ReadLineAsync();
-                    if (line == null)
+                    if (line is null)
                     {
                         break;
                     }

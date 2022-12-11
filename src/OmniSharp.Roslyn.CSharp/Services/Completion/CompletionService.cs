@@ -14,16 +14,16 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions;
 using OmniSharp.Mef;
-using OmniSharp.Models;
-using OmniSharp.Models.v1.Completion;
+using OmniSharp.Models.V1.Completion;
 using OmniSharp.Options;
 using OmniSharp.Roslyn.CSharp.Helpers;
 using OmniSharp.Roslyn.Utilities;
 using OmniSharp.Utilities;
 using Roslyn.Utilities;
-using CompletionItem = OmniSharp.Models.v1.Completion.CompletionItem;
-using CompletionTriggerKind = OmniSharp.Models.v1.Completion.CompletionTriggerKind;
+using CompletionItem = OmniSharp.Models.V1.Completion.CompletionItem;
+using CompletionTriggerKind = OmniSharp.Models.V1.Completion.CompletionTriggerKind;
 using CSharpCompletionService = Microsoft.CodeAnalysis.Completion.CompletionService;
+using OmniSharp.Models.V1;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Completion
 {
@@ -72,8 +72,8 @@ namespace OmniSharp.Roslyn.CSharp.Services.Completion
             var position = sourceText.GetTextPosition(request);
 
             var completionService = CSharpCompletionService.GetService(document);
-            RoslynDebug.Assert(completionService != null);
-            RoslynDebug.Assert(request.TriggerCharacter != null || request.CompletionTrigger != CompletionTriggerKind.TriggerCharacter);
+            RoslynDebug.Assert(completionService is not null);
+            RoslynDebug.Assert(request.TriggerCharacter is not null || request.CompletionTrigger != CompletionTriggerKind.TriggerCharacter);
 
             CompletionTrigger trigger = request.CompletionTrigger switch
             {
@@ -181,10 +181,10 @@ namespace OmniSharp.Roslyn.CSharp.Services.Completion
             }
 
             var completionService = CSharpCompletionService.GetService(document);
-            RoslynDebug.Assert(completionService != null);
+            RoslynDebug.Assert(completionService is not null);
 
             var description = await completionService.GetDescriptionAsync(document, lastCompletionItem);
-            RoslynDebug.Assert(description != null);
+            RoslynDebug.Assert(description is not null);
 
             var textBuilder = new StringBuilder();
             MarkdownHelpers.TaggedTextToMarkdown(description.TaggedParts, textBuilder, _formattingOptions, MarkdownFormat.FirstLineAsCSharp, out _);
@@ -258,7 +258,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Completion
             }
 
             var completionService = CSharpCompletionService.GetService(document);
-            RoslynDebug.Assert(completionService != null);
+            RoslynDebug.Assert(completionService is not null);
 
             // Get a document with change from the completion inserted, so that we can resolve the completion and get the
             // final full change.

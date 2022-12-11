@@ -19,7 +19,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         {
             foreach (var (selector, handler) in handlers
                 .OfType<Mef.IRequestHandler<CodeStructureRequest, CodeStructureResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpDocumentSymbolHandler(handler, selector);
         }
 

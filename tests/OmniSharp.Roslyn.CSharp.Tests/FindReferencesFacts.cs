@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using OmniSharp.Models;
 using OmniSharp.Models.FindUsages;
+using OmniSharp.Models.v1;
 using OmniSharp.Models.v1.SourceGeneratedFile;
 using OmniSharp.Roslyn.CSharp.Services.Navigation;
 using Roslyn.Test.Utilities;

@@ -17,7 +17,7 @@ namespace OmniSharp
             _environment = environment;
         }
 
-        public ConfigurationResult Build(Action<IConfigurationBuilder> additionalSetup = null)
+        public ConfigurationResult Build(Action<IConfigurationBuilder>? additionalSetup = null)
         {
             try
             {

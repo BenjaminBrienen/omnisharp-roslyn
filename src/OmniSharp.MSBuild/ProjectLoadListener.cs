@@ -43,7 +43,7 @@ namespace OmniSharp.MSBuild
                 var outputKind = GetOutputKind(args);
                 var projectCapabilities = GetProjectCapabilities(args.ProjectInstance);
 
-                if (args.References == null)
+                if (args.References is null)
                 {
                     return;
                 }

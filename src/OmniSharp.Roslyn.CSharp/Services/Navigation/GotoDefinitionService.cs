@@ -35,7 +35,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
                 _workspace.GetDocument(request.FileName);
 
             var symbol = await GoToDefinitionHelpers.GetDefinitionSymbol(document, request.Line, request.Column, cancellationToken);
-            if (symbol == null)
+            if (symbol is null)
             {
                 return new GotoDefinitionResponse();
             }

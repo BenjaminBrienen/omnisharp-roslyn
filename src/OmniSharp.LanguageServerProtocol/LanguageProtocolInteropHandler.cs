@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 using OmniSharp.Endpoint;
 using OmniSharp.Mef;
 using OmniSharp.Models;
-using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Models.V1.UpdateBuffer;
 
 namespace OmniSharp.LanguageServerProtocol
 {
@@ -55,8 +55,8 @@ namespace OmniSharp.LanguageServerProtocol
             EndpointName = metadata.EndpointName;
             _languagePredicateHandler = languagePredicateHandler;
 
-            _hasLanguageProperty = metadata.RequestType.GetRuntimeProperty(nameof(LanguageModel.Language)) != null;
-            _hasFileNameProperty = metadata.RequestType.GetRuntimeProperty(nameof(Request.FileName)) != null;
+            _hasLanguageProperty = metadata.RequestType.GetRuntimeProperty(nameof(LanguageModel.Language)) is not null;
+            _hasFileNameProperty = metadata.RequestType.GetRuntimeProperty(nameof(Request.FileName)) is not null;
             _canBeAggregated = typeof(IAggregateResponse).IsAssignableFrom(metadata.ResponseType);
             _updateBufferHandler = updateBufferHandler;
 
@@ -89,11 +89,11 @@ namespace OmniSharp.LanguageServerProtocol
         {
             var model = GetLanguageModel(requestObject);
             var request = requestObject.ToObject<TRequest>();
-            if (request is Request && _updateBufferHandler.Value != null)
+            if (request is Request && _updateBufferHandler.Value is not null)
             {
                 var realRequest = request as Request;
                 if (!string.IsNullOrWhiteSpace(realRequest.FileName) &&
-                    (realRequest.Buffer != null || realRequest.Changes != null))
+                    (realRequest.Buffer is not null || realRequest.Changes is not null))
                 {
                     await _updateBufferHandler.Value.Handle(requestObject);
                 }
@@ -163,7 +163,7 @@ namespace OmniSharp.LanguageServerProtocol
 
                 foreach (IAggregateResponse response in await Task.WhenAll(responses))
                 {
-                    if (aggregateResponse != null)
+                    if (aggregateResponse is not null)
                     {
                         aggregateResponse = aggregateResponse.Merge(response);
                     }
@@ -195,7 +195,7 @@ namespace OmniSharp.LanguageServerProtocol
                         return response;
                     }
                 }
-                else if (response != null)
+                else if (response is not null)
                 {
                     return response;
                 }
@@ -239,7 +239,7 @@ namespace OmniSharp.LanguageServerProtocol
 
             foreach (IAggregateResponse exportResponse in await Task.WhenAll(responses))
             {
-                if (aggregateResponse != null)
+                if (aggregateResponse is not null)
                 {
                     aggregateResponse = aggregateResponse.Merge(exportResponse);
                 }
@@ -251,7 +251,7 @@ namespace OmniSharp.LanguageServerProtocol
 
             object response = aggregateResponse;
 
-            if (response != null)
+            if (response is not null)
             {
                 return response;
             }

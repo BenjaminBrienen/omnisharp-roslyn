@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Mef;
-using OmniSharp.Models.FixUsings;
+using OmniSharp.Models.V1.FixUsings;
 using OmniSharp.Options;
 using OmniSharp.Roslyn.Utilities;
 using OmniSharp.Services;
@@ -34,7 +34,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
             var response = new FixUsingsResponse();
 
             var oldDocument = _workspace.GetDocument(request.FileName);
-            if (oldDocument != null)
+            if (oldDocument is not null)
             {
                 var fixUsingsResponse = await new FixUsingsWorker(_providers, _options)
                     .FixUsingsAsync(oldDocument);

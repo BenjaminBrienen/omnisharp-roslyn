@@ -46,7 +46,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
         {
             var availableActions = await GetAvailableCodeActions(request);
             var availableAction = availableActions.FirstOrDefault(a => a.GetIdentifier().Equals(request.Identifier));
-            if (availableAction == null)
+            if (availableAction is null)
             {
                 return new RunCodeActionResponse();
             }

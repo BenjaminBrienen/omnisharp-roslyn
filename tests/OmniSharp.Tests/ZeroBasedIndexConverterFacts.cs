@@ -1,9 +1,10 @@
 using Newtonsoft.Json;
 using OmniSharp.Models;
 using OmniSharp.Models.ChangeBuffer;
-using OmniSharp.Models.CodeAction;
 using OmniSharp.Models.Highlight;
 using OmniSharp.Models.Navigate;
+using OmniSharp.Models.V1;
+using OmniSharp.Models.V1.CodeAction;
 using OmniSharp.Models.V2;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void ShouldInteractWithEmacsLikeRequests()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             var request = new Request()
             {
@@ -25,7 +26,7 @@ namespace OmniSharp.Tests
             var output = JsonConvert.SerializeObject(request);
 
             // Pretend the client is really emacs / vim
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             var input = JsonConvert.DeserializeObject<Request>(output);
 
@@ -36,7 +37,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void ShouldInteractWithZeroBasedIndexes()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             var request = new Request()
             {
@@ -54,7 +55,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void ShouldInteractWithOneBasedIndexes()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             var request = new Request()
             {
@@ -72,7 +73,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void Point_OneBased()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             const string input = @"
 {
@@ -90,7 +91,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void Point_ZeroBased()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             const string input = @"
 {
@@ -108,7 +109,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void Range_OneBased()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             const string input = @"
 {
@@ -134,7 +135,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void Range_ZeroBased()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             const string input = @"
 {
@@ -160,7 +161,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void HighlightSpan_OneBased()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             const string input = @"
 {
@@ -182,7 +183,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void HighlightSpan_ZeroBased()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             const string input = @"
 {
@@ -204,7 +205,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void ChangeBufferRequest_OneBased()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             const string input = @"
 {
@@ -226,7 +227,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void ChangeBufferRequest_ZeroBased()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             const string input = @"
 {
@@ -248,7 +249,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void GetCodeActionRequest_OneBased()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             const string input = @"
 {
@@ -270,7 +271,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void GetCodeActionRequest_ZeroBased()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             const string input = @"
 {
@@ -292,7 +293,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void NavigateResponse_OneBased()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             var input = new NavigateResponse()
             {
@@ -315,7 +316,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void NavigateResponse_ZeroBased()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             var input = new NavigateResponse()
             {
@@ -338,7 +339,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void LinePositionSpanTextChange_OneBased()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             const string input = @"
 {
@@ -360,7 +361,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void LinePositionSpanTextChange_ZeroBased()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             const string input = @"
 {
@@ -382,7 +383,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void QuickFix_OneBased()
         {
-            Configuration.ZeroBasedIndices = false;
+            Configuration.UseZeroBasedIndices = false;
 
             var input = new QuickFix()
             {
@@ -412,7 +413,7 @@ namespace OmniSharp.Tests
         [Fact]
         public void QuickFix_ZeroBased()
         {
-            Configuration.ZeroBasedIndices = true;
+            Configuration.UseZeroBasedIndices = true;
 
             var input = new QuickFix()
             {

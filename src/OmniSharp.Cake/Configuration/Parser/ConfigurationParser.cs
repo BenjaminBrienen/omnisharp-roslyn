@@ -34,7 +34,7 @@ namespace OmniSharp.Cake.Configuration.Parser
             var section = string.Empty;
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            while (tokens.Current != null)
+            while (tokens.Current is not null)
             {
                 switch (tokens.Current.Kind)
                 {

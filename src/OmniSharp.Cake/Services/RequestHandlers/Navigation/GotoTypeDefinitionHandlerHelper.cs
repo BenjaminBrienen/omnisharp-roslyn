@@ -27,7 +27,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
             var lineIndex = line + MethodLineOffset;
             int column;
 
-            if (document == null)
+            if (document is null)
             {
                 return Enumerable.Empty<Alias>();
             }
@@ -61,7 +61,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
             var position = sourceText.Lines.GetPosition(new LinePosition(lineIndex, column));
             var symbol = await SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, workspace);
 
-            if (symbol == null || symbol is INamespaceSymbol)
+            if (symbol is null || symbol is INamespaceSymbol)
             {
                 return Enumerable.Empty<Alias>();
             }
@@ -79,7 +79,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
                 _ => null
             };
 
-            if (typeSymbol == null)
+            if (typeSymbol is null)
                 return Enumerable.Empty<Alias>();
 
             var result = new List<Alias>();
@@ -92,7 +92,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
 
                 var cancellationSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(timeout));
                 var (metadataDocument, _) = await externalSourceService.GetAndAddExternalSymbolDocument(document.Project, typeSymbol, cancellationSource.Token);
-                if (metadataDocument == null)
+                if (metadataDocument is null)
                 {
                     continue;
                 }

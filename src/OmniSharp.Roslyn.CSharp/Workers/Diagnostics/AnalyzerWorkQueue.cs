@@ -48,12 +48,12 @@ namespace OmniSharp.Roslyn.CSharp.Workers.Diagnostics
         {
             lock (_queueLock)
             {
-                var queue = _queues[workType];
+                Queue queue = _queues[workType];
 
                 if (queue.WorkWaitingToExecute.IsEmpty)
                     queue.LastThrottlingBegan = _utcNow();
 
-                if (queue.WorkPendingToken == null)
+                if (queue.WorkPendingToken is null)
                     queue.WorkPendingToken = new CancellationTokenSource();
 
                 queue.WorkWaitingToExecute = queue.WorkWaitingToExecute.Union(documentIds);
@@ -100,7 +100,7 @@ namespace OmniSharp.Roslyn.CSharp.Workers.Diagnostics
         {
             var queue = _queues[AnalyzerWorkType.Foreground];
 
-            if (queue.WorkPendingToken == null || (queue.WorkPendingToken == null && queue.WorkWaitingToExecute.IsEmpty))
+            if (queue.WorkPendingToken is null || (queue.WorkPendingToken is null && queue.WorkWaitingToExecute.IsEmpty))
                 return Task.CompletedTask;
 
             return Task.Delay(_maximumDelayWhenWaitingForResults, queue.WorkPendingToken.Token)

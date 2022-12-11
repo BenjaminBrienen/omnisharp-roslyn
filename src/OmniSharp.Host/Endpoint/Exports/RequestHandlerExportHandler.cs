@@ -16,7 +16,7 @@ namespace OmniSharp.Endpoint.Exports
         public override int CompareTo(ExportHandler<TRequest, TResponse> other)
         {
             var otherHandler = other as RequestHandlerExportHandler<TRequest, TResponse>;
-            if (otherHandler == null)
+            if (otherHandler is null)
             {
                 return 1;
             }

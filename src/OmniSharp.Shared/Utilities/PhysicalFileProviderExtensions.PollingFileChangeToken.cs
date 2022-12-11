@@ -71,7 +71,7 @@ namespace OmniSharp.Utilities
                                 _hasChanged = true;
 
                                 // Notify callbacks.
-                                if (_callbacks != null)
+                                if (_callbacks is not null)
                                 {
                                     // Once a callback is notified, it is removed from the list. It is up to the callback to
                                     // re-register itself.
@@ -120,7 +120,7 @@ namespace OmniSharp.Utilities
             {
                 lock (_gate)
                 {
-                    if (_callbacks == null)
+                    if (_callbacks is null)
                     {
                         _callbacks = new Dictionary<int, Action<object>>();
                     }
@@ -142,7 +142,7 @@ namespace OmniSharp.Utilities
             {
                 lock (_gate)
                 {
-                    if (_callbacks != null)
+                    if (_callbacks is not null)
                     {
                         _callbacks.Remove(callbackId);
 

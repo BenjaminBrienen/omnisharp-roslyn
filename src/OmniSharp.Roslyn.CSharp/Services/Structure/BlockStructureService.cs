@@ -26,7 +26,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Structure
         {
             // To provide complete code structure for the document wait until all projects are loaded.
             var document = await _workspace.GetDocumentFromFullProjectModelAsync(request.FileName);
-            if (document == null)
+            if (document is null)
             {
                 return new BlockStructureResponse { Spans = Array.Empty<CodeFoldingBlock>() };
             }

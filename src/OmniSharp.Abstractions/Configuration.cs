@@ -1,22 +1,17 @@
-namespace OmniSharp
+namespace OmniSharp;
+
+internal static class Configuration
 {
-    internal static class Configuration
-    {
-        public static bool ZeroBasedIndices = false;
+    public static bool UseZeroBasedIndices;
 
-        public const string RoslynVersion = "4.4.0.0";
-        public const string RoslynPublicKeyToken = "31bf3856ad364e35";
-
-        public readonly static string RoslynFeatures = GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.Features");
-        public readonly static string RoslynCSharpFeatures = GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.CSharp.Features");
-        public readonly static string RoslynOmniSharpExternalAccess = GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.ExternalAccess.OmniSharp");
-        public readonly static string RoslynOmniSharpExternalAccessCSharp = GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.ExternalAccess.OmniSharp.CSharp");
-        public readonly static string RoslynWorkspaces = GetRoslynAssemblyFullName("Microsoft.CodeAnalysis.Workspaces");
-        public readonly static string OmniSharpMiscProjectName = "OmniSharpMiscellaneousFiles";
-
-        private static string GetRoslynAssemblyFullName(string name)
-        {
-            return $"{name}, Version={RoslynVersion}, Culture=neutral, PublicKeyToken={RoslynPublicKeyToken}";
-        }
-    }
+    public const string RoslynVersion = "4.4.0.0";
+    public const string RoslynPublicKeyToken = "31bf3856ad364e35";
+    private const string MicrosoftCodeAnalysis = "Microsoft.CodeAnalysis.";
+    public const string RoslynFeatures = MicrosoftCodeAnalysis + "Features" + FullNameSuffix;
+    public const string RoslynCSharpFeatures = MicrosoftCodeAnalysis + "CSharp.Features" + FullNameSuffix;
+    public const string RoslynOmniSharpExternalAccess = MicrosoftCodeAnalysis + "ExternalAccess.OmniSharp" + FullNameSuffix;
+    public const string RoslynOmniSharpExternalAccessCSharp = MicrosoftCodeAnalysis + "ExternalAccess.OmniSharp.CSharp" + FullNameSuffix;
+    public const string RoslynWorkspaces = MicrosoftCodeAnalysis + "Workspaces" + FullNameSuffix;
+    public const string OmniSharpMiscProjectName = "OmniSharpMiscellaneousFiles";
+    private const string FullNameSuffix = $", Version={RoslynVersion}, Culture=neutral, PublicKeyToken={RoslynPublicKeyToken}";
 }

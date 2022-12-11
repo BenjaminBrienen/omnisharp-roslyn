@@ -10,8 +10,8 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Helpers;
 using OmniSharp.Mef;
-using OmniSharp.Models;
 using OmniSharp.Models.FindUsages;
+using OmniSharp.Models.V1;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Navigation
 {
@@ -33,7 +33,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
         {
             // To produce complete list of usages for symbols in the document wait until all projects are loaded.
             var document = await _workspace.GetDocumentFromFullProjectModelAsync(request.FileName);
-            if (document == null)
+            if (document is null)
             {
                 _logger.LogWarning($"No document found. File: {request.FileName}.");
                 return new QuickFixResponse();

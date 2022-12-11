@@ -18,7 +18,7 @@ namespace OmniSharp.MSBuild.ProjectFile
 
         public void Add(ProjectFileInfo fileInfo)
         {
-            if (fileInfo == null)
+            if (fileInfo is null)
             {
                 throw new ArgumentNullException(nameof(fileInfo));
             }

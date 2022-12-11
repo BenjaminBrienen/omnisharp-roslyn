@@ -26,7 +26,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring.V2
 
         public string GetTitle()
         {
-            return ParentCodeAction != null
+            return ParentCodeAction is not null
                 ? $"{ParentCodeAction.Title} -> {CodeAction.Title}"
                 : CodeAction.Title;
         }

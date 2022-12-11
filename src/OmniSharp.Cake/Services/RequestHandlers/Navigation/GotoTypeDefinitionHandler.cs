@@ -5,9 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using OmniSharp.Extensions;
 using OmniSharp.Mef;
-using OmniSharp.Models.GotoTypeDefinition;
 using OmniSharp.Models.Metadata;
-using OmniSharp.Models.v1.SourceGeneratedFile;
+using OmniSharp.Models.V1.SourceGeneratedFile;
 using OmniSharp.Models.V2;
 using OmniSharp.Roslyn;
 using OmniSharp.Utilities;
@@ -15,6 +14,7 @@ using Location = OmniSharp.Models.V2.Location;
 using Range = OmniSharp.Models.V2.Range;
 using OmniSharp.Roslyn.CSharp.Services;
 using OmniSharp.Options;
+using OmniSharp.Models.V2.GotoTypeDefinition;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
 {

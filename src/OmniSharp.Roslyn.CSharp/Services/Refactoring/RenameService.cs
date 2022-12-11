@@ -34,7 +34,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
             var response = new RenameResponse();
 
             var document = _workspace.GetDocument(request.FileName);
-            if (document != null)
+            if (document is not null)
             {
                 var sourceText = await document.GetTextAsync();
                 var position = sourceText.GetTextPosition(request);
@@ -42,7 +42,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
                 var symbol = await SymbolFinder.FindSymbolAtPositionAsync(document, position);
                 Solution solution = _workspace.CurrentSolution;
 
-                if (symbol != null)
+                if (symbol is not null)
                 {
                     var options = new OmniSharpRenameOptions(
                         RenameOverloads: _omniSharpOptions.RenameOptions.RenameOverloads,
@@ -83,7 +83,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
                             var originalDocument = _workspace.CurrentSolution.GetDocument(changedDocumentId);
                             var linePositionSpanTextChanges = await TextChanges.GetAsync(changedDocument, originalDocument);
 
-                            modifiedFileResponse.Changes = modifiedFileResponse.Changes != null
+                            modifiedFileResponse.Changes = modifiedFileResponse.Changes is not null
                                 ? modifiedFileResponse.Changes.Union(linePositionSpanTextChanges)
                                 : linePositionSpanTextChanges;
                         }

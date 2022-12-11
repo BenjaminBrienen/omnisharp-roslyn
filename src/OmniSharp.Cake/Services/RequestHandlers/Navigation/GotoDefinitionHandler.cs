@@ -50,7 +50,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
                 _metadataExternalSourceService
             )).FirstOrDefault();
 
-            if (alias == null)
+            if (alias is null)
             {
                 return new GotoDefinitionResponse();
             }

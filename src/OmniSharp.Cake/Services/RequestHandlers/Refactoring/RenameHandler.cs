@@ -4,6 +4,7 @@ using OmniSharp.Cake.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models.MembersTree;
 using OmniSharp.Models.Rename;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Refactoring
 {

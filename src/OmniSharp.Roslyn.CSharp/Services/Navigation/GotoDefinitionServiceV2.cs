@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using OmniSharp.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models.Metadata;
-using OmniSharp.Models.v1.SourceGeneratedFile;
+using OmniSharp.Models.V1.SourceGeneratedFile;
 using OmniSharp.Models.V2.GotoDefinition;
 using OmniSharp.Options;
 using System.Composition;
@@ -35,7 +35,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
             var document = externalSourceService.FindDocumentInCache(request.FileName) ??
                 _workspace.GetDocument(request.FileName);
 
-            if (document == null)
+            if (document is null)
             {
                 return new GotoDefinitionResponse();
             }

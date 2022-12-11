@@ -7,7 +7,7 @@ using OmniSharp.Extensions.JsonRpc;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Models.GotoTypeDefinition;
+using OmniSharp.Models.V2.GotoTypeDefinition;
 using static OmniSharp.LanguageServerProtocol.Helpers;
 
 namespace OmniSharp.LanguageServerProtocol.Handlers
@@ -17,7 +17,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         public static IEnumerable<IJsonRpcHandler> Enumerate(RequestHandlers handlers)
         {
             foreach (var (selector, handler) in handlers.OfType<Mef.IRequestHandler<GotoTypeDefinitionRequest, GotoTypeDefinitionResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpTypeDefinitionHandler(handler, selector);
         }
 
@@ -41,7 +41,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
 
             var omnisharpResponse = await _definitionHandler.Handle(omnisharpRequest);
 
-            if (omnisharpResponse.Definitions == null)
+            if (omnisharpResponse.Definitions is null)
             {
                 return new LocationOrLocationLinks();
             }

@@ -35,12 +35,12 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
             {
                 var compilation = await project.GetCompilationAsync();
                 var symbol = compilation.GetTypeByMetadataName(request.TypeName);
-                if (symbol != null && symbol.ContainingAssembly.Name == request.AssemblyName)
+                if (symbol is not null && symbol.ContainingAssembly.Name == request.AssemblyName)
                 {
                     var cancellationToken = _externalSourceServiceFactory.CreateCancellationToken(_omniSharpOptions, request.Timeout);
                     var (metadataDocument, documentPath) = await externalSourceService.GetAndAddExternalSymbolDocument(project, symbol, cancellationToken);
 
-                    if (metadataDocument != null)
+                    if (metadataDocument is not null)
                     {
                         var source = await metadataDocument.GetTextAsync();
                         response.Source = source.ToString();

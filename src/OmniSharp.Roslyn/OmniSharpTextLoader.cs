@@ -13,7 +13,7 @@ namespace OmniSharp
 
         public OmniSharpTextLoader(string filePath)
         {
-            if (filePath == null)
+            if (filePath is null)
             {
                 throw new ArgumentNullException(nameof(filePath));
             }

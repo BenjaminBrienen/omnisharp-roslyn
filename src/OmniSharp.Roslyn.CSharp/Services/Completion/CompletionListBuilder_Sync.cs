@@ -5,8 +5,7 @@ using Microsoft.CodeAnalysis.ExternalAccess.OmniSharp.Completion;
 using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.Text;
 using OmniSharp.Extensions;
-using OmniSharp.Models;
-using OmniSharp.Models.v1.Completion;
+using OmniSharp.Models.V1.Completion;
 using OmniSharp.Roslyn.CSharp.Helpers;
 using OmniSharp.Roslyn.Utilities;
 using OmniSharp.Utilities;
@@ -15,10 +14,11 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using CompletionItem = OmniSharp.Models.v1.Completion.CompletionItem;
+using CompletionItem = OmniSharp.Models.V1.Completion.CompletionItem;
 using CSharpCompletionItem = Microsoft.CodeAnalysis.Completion.CompletionItem;
 using CSharpCompletionList = Microsoft.CodeAnalysis.Completion.CompletionList;
 using CSharpCompletionService = Microsoft.CodeAnalysis.Completion.CompletionService;
+using OmniSharp.Models.V1;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Completion
 {
@@ -194,7 +194,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Completion
                         var editStartPoint = sourceText.GetPointFromPosition(changeSpanStart);
                         var numLinesEdited = cursorPoint.Line - editStartPoint.Line;
 
-                        Debug.Assert(textChange.NewText != null);
+                        Debug.Assert(textChange.NewText is not null);
 
                         // Now count that many newlines forward in the edited text
                         int cutoffPosition = 0;

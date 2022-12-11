@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 
-namespace OmniSharp.MSBuild.Discovery.Providers
-{
-    internal class SdkOptions
-    {
-        public Dictionary<string, string> PropertyOverrides { get; set; }
+namespace OmniSharp.MSBuild.Discovery.Providers;
 
-        public string Path { get; set; }
-
-        public string Version { get; set; }
-
-        public bool IncludePrereleases { get; set; }
-    }
-}
+internal record SdkOptions
+(
+    Dictionary<string, string> PropertyOverrides,
+    string Path,
+    string Version,
+    bool IncludePrereleases
+);

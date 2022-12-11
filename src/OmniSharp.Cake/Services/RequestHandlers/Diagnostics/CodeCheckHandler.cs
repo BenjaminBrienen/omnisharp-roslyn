@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using OmniSharp.Cake.Extensions;
 using OmniSharp.Mef;
-using OmniSharp.Models;
 using OmniSharp.Models.CodeCheck;
+using OmniSharp.Models.V1;
+using OmniSharp.Roslyn;
 using OmniSharp.Utilities;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Diagnostics

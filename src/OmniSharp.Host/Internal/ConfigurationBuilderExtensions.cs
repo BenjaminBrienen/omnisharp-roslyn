@@ -10,7 +10,7 @@ namespace OmniSharp.Internal
     {
         internal static void CreateAndAddGlobalOptionsFile(this IConfigurationBuilder configBuilder, IOmniSharpEnvironment env)
         {
-            if (env?.SharedDirectory == null) return;
+            if (env?.SharedDirectory is null) return;
 
             try
             {

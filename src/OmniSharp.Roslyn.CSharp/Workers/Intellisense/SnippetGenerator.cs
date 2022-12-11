@@ -171,7 +171,7 @@ namespace OmniSharp
         private bool IsConstructor(ISymbol symbol)
         {
             var methodSymbol = symbol as IMethodSymbol;
-            return methodSymbol != null && methodSymbol.MethodKind == MethodKind.Constructor;
+            return methodSymbol is not null && methodSymbol.MethodKind == MethodKind.Constructor;
         }
 
         private void RenderSnippetStartMarker()

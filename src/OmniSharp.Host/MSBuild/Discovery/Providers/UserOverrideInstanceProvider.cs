@@ -17,7 +17,7 @@ namespace OmniSharp.MSBuild.Discovery.Providers
 
         public override ImmutableArray<MSBuildInstance> GetInstances()
         {
-            if (_options == null || string.IsNullOrWhiteSpace(_options.MSBuildPath))
+            if (_options is null || string.IsNullOrWhiteSpace(_options.MSBuildPath))
             {
                 return ImmutableArray<MSBuildInstance>.Empty;
             }

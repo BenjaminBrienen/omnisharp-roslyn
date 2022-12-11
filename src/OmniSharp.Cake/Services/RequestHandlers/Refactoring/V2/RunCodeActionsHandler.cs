@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using OmniSharp.Cake.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models.V2.CodeActions;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Refactoring.V2
 {

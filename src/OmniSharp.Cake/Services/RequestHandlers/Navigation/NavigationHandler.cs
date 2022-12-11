@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using OmniSharp.Cake.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models.Navigate;
+using OmniSharp.Models.V1.Navigate;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
 {

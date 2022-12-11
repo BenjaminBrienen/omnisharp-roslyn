@@ -34,7 +34,7 @@ namespace OmniSharp.MSBuild
         {
             var builder = new StringBuilder();
 
-            if (buildEnvironment != null)
+            if (buildEnvironment is not null)
             {
                 const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
 
@@ -77,7 +77,7 @@ namespace OmniSharp.MSBuild
             var initializeMethod = s_BuildEnvironmentHelperType.GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
             var buildEnvironment = initializeMethod.Invoke(null, null);
 
-            if (buildEnvironment == null)
+            if (buildEnvironment is null)
             {
                 return false;
             }

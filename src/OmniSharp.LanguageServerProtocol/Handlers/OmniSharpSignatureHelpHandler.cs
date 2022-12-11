@@ -9,6 +9,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Models.SignatureHelp;
+using OmniSharp.Models.V1.SignatureHelp;
 
 namespace OmniSharp.LanguageServerProtocol.Handlers
 {
@@ -27,7 +28,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         {
             foreach (var (selector, handler) in handlers
                 .OfType<Mef.IRequestHandler<SignatureHelpRequest, SignatureHelpResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpSignatureHelpHandler(handler, selector);
         }
 
@@ -42,7 +43,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
 
             var omnisharpResponse = await _signatureHandler.Handle(omnisharpRequest);
 
-            if (omnisharpResponse == null || !omnisharpResponse.Signatures.Any())
+            if (omnisharpResponse is null || !omnisharpResponse.Signatures.Any())
             {
                 return null;
             }

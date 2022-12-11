@@ -40,7 +40,7 @@ namespace OmniSharp.Cake.Services
 
             var bakeryPath = GetLatestBakeryPath(toolPath);
 
-            if (bakeryPath == null)
+            if (bakeryPath is null)
             {
                 return string.Empty;
             }

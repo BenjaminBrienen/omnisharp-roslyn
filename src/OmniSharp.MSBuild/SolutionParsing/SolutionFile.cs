@@ -25,7 +25,7 @@ namespace OmniSharp.MSBuild.SolutionParsing
 
         public static SolutionFile Parse(string text)
         {
-            if (text == null)
+            if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
@@ -40,12 +40,12 @@ namespace OmniSharp.MSBuild.SolutionParsing
                 var globalSections = ImmutableArray.CreateBuilder<GlobalSectionBlock>();
 
                 string line;
-                while ((line = scanner.NextLine()) != null)
+                while ((line = scanner.NextLine()) is not null)
                 {
                     if (line.StartsWith("Project(", StringComparison.Ordinal))
                     {
                         var project = ProjectBlock.Parse(line, scanner);
-                        if (project != null)
+                        if (project is not null)
                         {
                             projects.Add(project);
                         }
@@ -53,7 +53,7 @@ namespace OmniSharp.MSBuild.SolutionParsing
                     else if (line.StartsWith("GlobalSection(", StringComparison.Ordinal))
                     {
                         var globalSection = GlobalSectionBlock.Parse(line, scanner);
-                        if (globalSection != null)
+                        if (globalSection is not null)
                         {
                             globalSections.Add(globalSection);
                         }
@@ -82,7 +82,7 @@ namespace OmniSharp.MSBuild.SolutionParsing
             for (var i = 0; i < 2; i++)
             {
                 var line = scanner.NextLine();
-                if (line == null)
+                if (line is null)
                 {
                     break;
                 }

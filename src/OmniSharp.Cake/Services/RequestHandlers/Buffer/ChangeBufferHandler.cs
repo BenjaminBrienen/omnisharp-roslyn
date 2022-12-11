@@ -4,6 +4,7 @@ using Cake.Scripting.Abstractions.Models;
 using OmniSharp.Mef;
 using OmniSharp.Models.ChangeBuffer;
 using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Buffer
 {
@@ -24,7 +25,7 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Buffer
 
         public async Task<object> Handle(ChangeBufferRequest request)
         {
-            if (request.FileName == null)
+            if (request.FileName is null)
             {
                 return true;
             }

@@ -18,6 +18,7 @@ using OmniSharp.LanguageServerProtocol;
 using OmniSharp.Mef;
 using OmniSharp.Models.WorkspaceInformation;
 using OmniSharp.MSBuild;
+using OmniSharp.Roslyn;
 using OmniSharp.Roslyn.CSharp.Services;
 using OmniSharp.Script;
 using OmniSharp.Services;

@@ -3,42 +3,42 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace OmniSharp.Options
+namespace OmniSharp.Options;
+
+public record RoslynExtensionsOptions
+(
+    bool EnableDecompilationSupport,
+    bool EnableAnalyzersSupport,
+    bool EnableImportCompletion,
+    bool EnableAsyncCompletion,
+    int DocumentAnalysisTimeoutMs,
+    bool AnalyzeOpenDocumentsOnly,
+    InlayHintsOptions InlayHintsOptions,
+    IEnumerable<string> LocationPaths,
+    int DiagnosticWorkersThreadCount
+) : OmniSharpExtensionsOptions(LocationPaths);
+
+public record OmniSharpExtensionsOptions(IEnumerable<string> LocationPaths)
 {
-    public class RoslynExtensionsOptions : OmniSharpExtensionsOptions
+    public IEnumerable<string> GetNormalizedLocationPaths(IOmniSharpEnvironment env)
     {
-        public bool EnableDecompilationSupport { get; set; }
-        public bool EnableAnalyzersSupport { get; set; }
-        public bool EnableImportCompletion { get; set; }
-        public bool EnableAsyncCompletion { get; set; }
-        public int DocumentAnalysisTimeoutMs { get; set; } = 30 * 1000;
-        public int DiagnosticWorkersThreadCount { get; set; } = Math.Max(1, (int)(Environment.ProcessorCount * 0.75)); // Use 75% of available processors by default (but at least one)
-        public bool AnalyzeOpenDocumentsOnly { get; set; }
-        public InlayHintsOptions InlayHintsOptions { get; set; } = new();
-    }
+        if (env is null)
+            throw new ArgumentNullException(nameof(env));
+        if (LocationPaths is null || !LocationPaths.Any())
+            return Enumerable.Empty<string>();
 
-    public class OmniSharpExtensionsOptions
-    {
-        public string[] LocationPaths { get; set; }
-
-        public IEnumerable<string> GetNormalizedLocationPaths(IOmniSharpEnvironment env)
+        var normalizePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (string locationPath in LocationPaths)
         {
-            if (LocationPaths == null || LocationPaths.Length == 0) return Enumerable.Empty<string>();
-
-            var normalizePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var locationPath in LocationPaths)
+            if (Path.IsPathRooted(locationPath))
             {
-                if (Path.IsPathRooted(locationPath))
-                {
-                    normalizePaths.Add(locationPath);
-                }
-                else
-                {
-                    normalizePaths.Add(Path.Combine(env.TargetDirectory, locationPath));
-                }
+                normalizePaths.Add(locationPath);
             }
-
-            return normalizePaths;
+            else
+            {
+                normalizePaths.Add(Path.Combine(env.TargetDirectory, locationPath));
+            }
         }
+        return normalizePaths;
     }
 }

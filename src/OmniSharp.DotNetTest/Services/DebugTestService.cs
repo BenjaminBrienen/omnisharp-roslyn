@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using OmniSharp.DotNetTest.Models;
 using OmniSharp.Eventing;
 using OmniSharp.Mef;
+using OmniSharp.Roslyn;
 using OmniSharp.Services;
 
 namespace OmniSharp.DotNetTest.Services

@@ -30,7 +30,7 @@ namespace OmniSharp.Services
             var cacheKey = _cacheKeyPrefix + filePath.ToLowerInvariant();
 
             var assemblyMetadata = _cache.Get<AssemblyMetadata>(cacheKey);
-            if (assemblyMetadata == null)
+            if (assemblyMetadata is null)
             {
                 _logger.LogDebug(string.Format("Cache miss {0}", filePath));
 

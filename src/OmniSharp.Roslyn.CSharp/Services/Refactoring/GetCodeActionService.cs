@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis.Text;
 using OmniSharp.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models.CodeAction;
+using OmniSharp.Models.V1.CodeAction;
 using OmniSharp.Services;
 
 namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
@@ -38,7 +39,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
         private async Task<CodeRefactoringContext?> GetContext(CodeActionRequest request, List<CodeAction> actionsDestination)
         {
             var document = _workspace.GetDocument(request.FileName);
-            if (document != null)
+            if (document is not null)
             {
                 var sourceText = await document.GetTextAsync();
                 var position = sourceText.GetTextPosition(request);
@@ -57,7 +58,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Refactoring
                 return;
             }
 
-            if (_codeActionProviders != null)
+            if (_codeActionProviders is not null)
             {
                 foreach (var provider in _codeActionProviders)
                 {

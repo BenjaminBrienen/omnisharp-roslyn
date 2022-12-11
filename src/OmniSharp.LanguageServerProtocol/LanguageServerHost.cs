@@ -30,7 +30,8 @@ using OmniSharp.FileWatching;
 using OmniSharp.LanguageServerProtocol.Eventing;
 using OmniSharp.LanguageServerProtocol.Handlers;
 using OmniSharp.Mef;
-using OmniSharp.Models.UpdateBuffer;
+using OmniSharp.Models;
+using OmniSharp.Models.V1.UpdateBuffer;
 using OmniSharp.Options;
 using OmniSharp.Plugins;
 using OmniSharp.Protocol;
@@ -311,7 +312,7 @@ namespace OmniSharp.LanguageServerProtocol
                     Lazy<LanguageProtocolInteropHandler> handler) => async (request, cancellationToken) =>
                 {
                     var response = await handler.Value.Handle(request);
-                    return response == null ? JValue.CreateNull() : JToken.FromObject(response);
+                    return response is null ? JValue.CreateNull() : JToken.FromObject(response);
                 };
 
                 r.OnRequest<JToken, object>($"o#/{OmniSharpEndpoints.CheckAliveStatus.Trim('/').ToLowerInvariant()}",

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Composition;
 using OmniSharp.Mef;
-using OmniSharp.Models.AutoComplete;
+using OmniSharp.Models.V1.AutoComplete;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Services.RequestHandlers.Intellisense
 {

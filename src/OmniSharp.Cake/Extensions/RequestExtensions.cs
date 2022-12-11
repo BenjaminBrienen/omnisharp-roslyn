@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using OmniSharp.Cake.Utilities;
 using OmniSharp.Models;
+using OmniSharp.Models.V1;
+using OmniSharp.Roslyn;
 
 namespace OmniSharp.Cake.Extensions
 {
@@ -11,7 +13,7 @@ namespace OmniSharp.Cake.Extensions
         {
             request.Line = await LineIndexHelper.TranslateToGenerated(request.FileName, request.Line, workspace);
 
-            if (request.Changes == null)
+            if (request.Changes is null)
             {
                 return request;
             }

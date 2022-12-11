@@ -9,18 +9,18 @@ using OmniSharp.Extensions.JsonRpc;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Models.v1.Completion;
+using OmniSharp.Models.V1.Completion;
 
 using CompletionTriggerKind = OmniSharp.Extensions.LanguageServer.Protocol.Models.CompletionTriggerKind;
-using OmnisharpCompletionTriggerKind = OmniSharp.Models.v1.Completion.CompletionTriggerKind;
+using OmnisharpCompletionTriggerKind = OmniSharp.Models.V1.Completion.CompletionTriggerKind;
 using CompletionItemKind = OmniSharp.Extensions.LanguageServer.Protocol.Models.CompletionItemKind;
-using OmnisharpCompletionItemKind = OmniSharp.Models.v1.Completion.CompletionItemKind;
+using OmnisharpCompletionItemKind = OmniSharp.Models.V1.Completion.CompletionItemKind;
 using CompletionItem = OmniSharp.Extensions.LanguageServer.Protocol.Models.CompletionItem;
-using OmnisharpCompletionItem = OmniSharp.Models.v1.Completion.CompletionItem;
+using OmnisharpCompletionItem = OmniSharp.Models.V1.Completion.CompletionItem;
 using CompletionItemTag = OmniSharp.Extensions.LanguageServer.Protocol.Models.CompletionItemTag;
-using OmnisharpCompletionItemTag = OmniSharp.Models.v1.Completion.CompletionItemTag;
+using OmnisharpCompletionItemTag = OmniSharp.Models.V1.Completion.CompletionItemTag;
 using InsertTextFormat = OmniSharp.Extensions.LanguageServer.Protocol.Models.InsertTextFormat;
-using OmnisharpInsertTextFormat = OmniSharp.Models.v1.Completion.InsertTextFormat;
+using OmnisharpInsertTextFormat = OmniSharp.Models.V1.Completion.InsertTextFormat;
 
 #nullable enable
 
@@ -36,7 +36,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
                 .OfType<Mef.IRequestHandler<CompletionRequest, CompletionResponse>,
                         Mef.IRequestHandler<CompletionResolveRequest, CompletionResolveResponse>>())
             {
-                if (completionHandler != null && completionResolveHandler != null)
+                if (completionHandler is not null && completionResolveHandler is not null)
                     yield return new OmniSharpCompletionHandler(completionHandler, completionResolveHandler, selector);
             }
         }
@@ -80,7 +80,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
 
             var result = await _completionResolveHandler.Handle(resolveRequest);
 
-            Debug.Assert(result.Item != null);
+            Debug.Assert(result.Item is not null);
             return ToLSPCompletionItem(result.Item!);
         }
 

@@ -44,12 +44,12 @@ namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
         {
             _logger = loggerFactory.CreateLogger<CSharpDiagnosticWorkerWithAnalyzers>();
             _providers = providers.ToImmutableArray();
-            _workQueue = new AnalyzerWorkQueue(loggerFactory, timeoutForPendingWorkMs: options.RoslynExtensionsOptions.DocumentAnalysisTimeoutMs * 3);
-            _throttler = new SemaphoreSlim(options.RoslynExtensionsOptions.DiagnosticWorkersThreadCount);
-
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _forwarder = forwarder;
-            _options = options;
             _workspace = workspace;
+
+            _workQueue = new AnalyzerWorkQueue(loggerFactory, timeoutForPendingWorkMs: _options.RoslynExtensionsOptions.DocumentAnalysisTimeoutMs * 3);
+            _throttler = new SemaphoreSlim(options.RoslynExtensionsOptions.DiagnosticWorkersThreadCount);
 
             _workspace.WorkspaceChanged += OnWorkspaceChanged;
             _workspace.OnInitialized += OnWorkspaceInitialized;
@@ -113,7 +113,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
                     var documents = _workQueue
                         .TakeWork(workType)
                         .Select(documentId => (projectId: solution.GetDocument(documentId)?.Project?.Id, documentId))
-                        .Where(x => x.projectId != null)
+                        .Where(x => x.projectId is not null)
                         .ToImmutableArray();
 
                     if (documents.IsEmpty)
@@ -183,10 +183,7 @@ namespace OmniSharp.Roslyn.CSharp.Services.Diagnostics
                 _forwarder.BackgroundDiagnosticsStatus(status, numberProjects, numberFiles, numberFilesRemaining);
         }
 
-        private void QueueForAnalysis(ImmutableArray<DocumentId> documentIds, AnalyzerWorkType workType)
-        {
-            _workQueue.PutWork(documentIds, workType);
-        }
+        private void QueueForAnalysis(ImmutableArray<DocumentId> documentIds, AnalyzerWorkType workType) => _workQueue.PutWork(documentIds, workType);
 
         private void OnWorkspaceChanged(object sender, WorkspaceChangeEventArgs changeEvent)
         {

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
 using OmniSharp.Models;
-using OmniSharp.Models.v1.SourceGeneratedFile;
+using OmniSharp.Models.V1;
+using OmniSharp.Models.V1.SourceGeneratedFile;
 
 #nullable enable
 

@@ -35,7 +35,7 @@ namespace OmniSharp.Lsp.Tests
             await WaitForDiagnostics();
 
             var quickFixes = GetDiagnostics("a.cs");
-            Assert.Contains(quickFixes, x => x.Code == "CS0029");
+            Assert.Contains(quickFixes, x => x.Code is "CS0029");
         }
 
         private Task ReadyHost(bool roslynAnalyzersEnabled)
@@ -54,8 +54,8 @@ namespace OmniSharp.Lsp.Tests
 
             await SettleNext();
 
-            Assert.Contains(GetDiagnostics("a.cs"), x => x.Code == "CS0029");
-            Assert.Contains(GetDiagnostics("b.cs"), x => x.Code == "CS0029");
+            Assert.Contains(GetDiagnostics("a.cs"), x => x.Code is "CS0029");
+            Assert.Contains(GetDiagnostics("b.cs"), x => x.Code is "CS0029");
         }
 
         [Fact]
@@ -69,9 +69,9 @@ namespace OmniSharp.Lsp.Tests
             await WaitForDiagnostics();
 
             Assert.Contains(GetDiagnostics("a.cs"),
-                x => x.Code == "CS0029");
+                x => x.Code is "CS0029");
             Assert.Contains(GetDiagnostics("b.cs"),
-                x => x.Code == "CS0029");
+                x => x.Code is "CS0029");
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace OmniSharp.Lsp.Tests
             AddFilesToWorkspace(new TestFile("a.cs", "class C1 { int n = true; }"));
 
             await WaitForDiagnostics();
-            Assert.Contains(GetDiagnostics("a.cs"), x => x.Code == "IDE0044");
+            Assert.Contains(GetDiagnostics("a.cs"), x => x.Code is "IDE0044");
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace OmniSharp.Lsp.Tests
 
             Assert.Contains(DiagnosticTag.Unnecessary,
                 GetDiagnostics("returnidetags.cs")
-                .Single(x => x.Code == "IDE0005")
+                .Single(x => x.Code is "IDE0005")
                 .Tags);
         }
 
@@ -123,7 +123,7 @@ namespace OmniSharp.Lsp.Tests
 
             await WaitForDiagnostics();
 
-            var allDiagnostics = GetDiagnostics("a.cs").Where(x => x.Code == "CS0019");
+            var allDiagnostics = GetDiagnostics("a.cs").Where(x => x.Code is "CS0019");
             Assert.Empty(allDiagnostics);
         }
     }

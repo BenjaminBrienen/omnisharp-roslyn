@@ -46,7 +46,7 @@ namespace OmniSharp
         private static CodeFixProvider FindCodeFixProviderByTypeFullName(IEnumerable<CodeFixProvider> providers, string fullName)
         {
             var provider = providers.FirstOrDefault(p => p.GetType().FullName == fullName);
-            if (provider == null)
+            if (provider is null)
             {
                 throw new InvalidOperationException($"Could not locate {fullName}");
             }
@@ -118,7 +118,7 @@ namespace OmniSharp
                 var unboundNames = root
                     .DescendantNodes()
                     .OfType<SimpleNameSyntax>()
-                    .Where(name => semanticModel.GetSymbolInfo(name).Symbol == null)
+                    .Where(name => semanticModel.GetSymbolInfo(name).Symbol is null)
                     .ToArray();
 
                 var done = false;
@@ -191,7 +191,7 @@ namespace OmniSharp
 
                     foreach (var operation in operations.OfType<ApplyChangesOperation>())
                     {
-                        if (operation != null)
+                        if (operation is not null)
                         {
                             if (document.Project.Solution != operation.ChangedSolution)
                             {

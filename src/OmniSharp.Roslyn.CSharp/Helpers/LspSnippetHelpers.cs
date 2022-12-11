@@ -11,7 +11,7 @@ namespace OmniSharp.Roslyn.CSharp.Helpers
         /// </summary>
         public static string Escape(string snippet)
         {
-            if (snippet == null)
+            if (snippet is null)
                 return null;
             return EscapeRegex.Replace(snippet, @"\$1");
         }

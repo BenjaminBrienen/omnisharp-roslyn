@@ -45,7 +45,7 @@ namespace OmniSharp.DotNetTest.TestFrameworks
 
         public bool IsTestAttribute(INamedTypeSymbol symbol)
         {
-            while (symbol != null && symbol.SpecialType != SpecialType.System_Object)
+            while (symbol is not null && symbol.SpecialType != SpecialType.System_Object)
             {
                 var typeName = !symbol.ContainingNamespace.IsGlobalNamespace
                     ? $"{symbol.ContainingNamespace}.{symbol.Name}"
@@ -83,7 +83,7 @@ namespace OmniSharp.DotNetTest.TestFrameworks
                 {
                     var typeSymbol = sematicModel.GetTypeInfo(attribute).Type;
 
-                    while (typeSymbol != null && typeSymbol.SpecialType != SpecialType.System_Object)
+                    while (typeSymbol is not null && typeSymbol.SpecialType != SpecialType.System_Object)
                     {
                         var typeName = !typeSymbol.ContainingNamespace.IsGlobalNamespace
                             ? $"{typeSymbol.ContainingNamespace}.{typeSymbol.Name}"

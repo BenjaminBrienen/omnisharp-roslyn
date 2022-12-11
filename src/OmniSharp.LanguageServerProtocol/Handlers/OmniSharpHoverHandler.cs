@@ -16,7 +16,7 @@ namespace OmniSharp.LanguageServerProtocol.Handlers
         {
             foreach (var (selector, handler) in handlers
                 .OfType<Mef.IRequestHandler<QuickInfoRequest, QuickInfoResponse>>())
-                if (handler != null)
+                if (handler is not null)
                     yield return new OmniSharpHoverHandler(handler, selector);
         }
 

@@ -7,7 +7,7 @@ using OmniSharp.Extensions;
 using OmniSharp.Mef;
 using OmniSharp.Models.V2.GotoDefinition;
 using OmniSharp.Models.Metadata;
-using OmniSharp.Models.v1.SourceGeneratedFile;
+using OmniSharp.Models.V1.SourceGeneratedFile;
 using OmniSharp.Models.V2;
 using OmniSharp.Roslyn;
 using OmniSharp.Utilities;
